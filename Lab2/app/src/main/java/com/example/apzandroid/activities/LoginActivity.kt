@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.apzandroid.R
 import com.example.apzandroid.models.auth_models.LoginRequest
 import com.example.apzandroid.models.auth_models.LoginResponse
+import com.example.apzandroid.utils.CsrfTokenManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -73,9 +74,16 @@ class LoginActivity : AppCompatActivity() {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                 if (response.isSuccessful) {
                     val cookies = response.headers().values("Set-Cookie")
+                    var csrfToken: String? = null
+
                     if (cookies.isNotEmpty()) {
                         for (cookie in cookies) {
                             Log.d("Cookies", "Received cookie: $cookie")
+
+                            if (cookie.contains("csrftoken")) {
+                                csrfToken = cookie.split(";")[0].split("=")[1]
+                                CsrfTokenManager.saveCsrfToken(applicationContext, csrfToken)
+                            }
                         }
                         Toast.makeText(applicationContext, "Cookies: $cookies", Toast.LENGTH_LONG).show()
                     } else {
@@ -101,7 +109,6 @@ class LoginActivity : AppCompatActivity() {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            val email = account?.email
             val name = account?.displayName
 
             Toast.makeText(this, "Google Login: $name", Toast.LENGTH_SHORT).show()

@@ -1,6 +1,6 @@
 package com.example.apzandroid.models.account_models
 
-data class MySelfResponse (
+data class UpdateCustomerResponse (
     val id: String,
     val username: Int,
     val email: String,

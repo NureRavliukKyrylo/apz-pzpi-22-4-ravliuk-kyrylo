@@ -19,7 +19,7 @@ import retrofit2.Response
 
 
 class StationAdapter(
-    private val stations: List<StationsResponse>,
+    private var stations: List<StationsResponse>,
     private val csrfToken: String
 ) : RecyclerView.Adapter<StationAdapter.StationViewHolder>() {
 
@@ -43,7 +43,7 @@ class StationAdapter(
             .enqueue(object : Callback<StationStatusResponse> {
                 override fun onResponse(call: Call<StationStatusResponse>, response: Response<StationStatusResponse>) {
                     if (response.isSuccessful) {
-                        holder.stationStatus.text = response.body()?.station_status_name ?: "Uknown"
+                        holder.stationStatus.text = response.body()?.station_status_name ?: "Unknown"
                     } else {
                         holder.stationStatus.text = "Помилка"
                     }
@@ -76,6 +76,11 @@ class StationAdapter(
                 Toast.makeText(holder.itemView.context, "Помилка підключення", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    fun updateData(newStations: List<StationsResponse>) {
+        stations = newStations
+        notifyDataSetChanged()
     }
 
     private fun addContainersToStation(holder: StationViewHolder, containers: List<ContainersResponse>) {
@@ -125,5 +130,6 @@ class StationAdapter(
             holder.containerBlock.requestLayout()
         }
     }
+
 }
 

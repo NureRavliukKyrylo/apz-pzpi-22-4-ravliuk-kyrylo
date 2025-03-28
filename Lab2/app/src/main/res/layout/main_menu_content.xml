@@ -166,8 +166,8 @@
 
                 <TextView
                     android:id="@+id/card_text3"
-                    android:layout_width="178dp"
-                    android:layout_height="360dp"
+                    android:layout_width="179dp"
+                    android:layout_height="361dp"
                     android:background="#72C85E"
                     android:gravity="center|top"
                     android:padding="16dp"
@@ -176,7 +176,7 @@
                     android:textSize="30sp"
                     android:textStyle="bold"
                     tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="1dp" />
+                    tools:layout_editor_absoluteY="0dp" />
 
                 <ImageView
                     android:id="@+id/imageView5"

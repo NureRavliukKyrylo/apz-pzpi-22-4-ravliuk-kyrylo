@@ -8,9 +8,9 @@
 
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_width="402dp"
-        android:layout_height="779dp"
-        tools:layout_editor_absoluteX="1dp"
+        android:layout_width="406dp"
+        android:layout_height="809dp"
+        tools:layout_editor_absoluteX="-2dp"
         tools:layout_editor_absoluteY="2dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,7 @@
             android:layout_height="780dp"
             android:layout_marginStart="2dp"
             android:layout_marginTop="4dp"
-            android:layout_marginEnd="5dp"/>
+            android:layout_marginEnd="5dp" />
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

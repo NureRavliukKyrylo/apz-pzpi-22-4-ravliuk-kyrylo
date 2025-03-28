@@ -16,9 +16,16 @@ class MainMenuFragment : Fragment() {
         val view = inflater.inflate(R.layout.main_menu_content, container, false)
 
         val profileCard = view.findViewById<CardView>(R.id.profile_view)
+        val stationsCard = view.findViewById<CardView>(R.id.stations_card_view)
         profileCard.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, ProfileFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+        stationsCard.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, StationsFragment())
                 .addToBackStack(null)
                 .commit()
         }

@@ -1,5 +1,7 @@
 import com.example.apzandroid.api.AccountService
 import com.example.apzandroid.api.AuthService
+import com.example.apzandroid.api.ContainersService
+import com.example.apzandroid.api.StationsService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -25,6 +27,14 @@ object RetrofitClient {
 
     val accountService: AccountService by lazy{
         retrofit.create(AccountService::class.java)
+    }
+
+    val stationsService: StationsService by lazy {
+        retrofit.create(StationsService::class.java)
+    }
+
+    val containersService: ContainersService by lazy {
+        retrofit.create(ContainersService::class.java)
     }
 
 

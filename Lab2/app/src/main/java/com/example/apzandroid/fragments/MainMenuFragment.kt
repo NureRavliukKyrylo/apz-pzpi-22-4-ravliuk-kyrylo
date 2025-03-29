@@ -17,15 +17,25 @@ class MainMenuFragment : Fragment() {
 
         val profileCard = view.findViewById<CardView>(R.id.profile_view)
         val stationsCard = view.findViewById<CardView>(R.id.stations_card_view)
+        val mapCard = view.findViewById<CardView>(R.id.map_interactive)
+
         profileCard.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, ProfileFragment())
                 .addToBackStack(null)
                 .commit()
         }
+
         stationsCard.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, StationsFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        mapCard.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, MapFragment())
                 .addToBackStack(null)
                 .commit()
         }

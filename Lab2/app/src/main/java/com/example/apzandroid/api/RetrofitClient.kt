@@ -21,6 +21,7 @@ object RetrofitClient {
             .build()
     }
 
+
     val authService: AuthService by lazy {
         retrofit.create(AuthService::class.java)
     }

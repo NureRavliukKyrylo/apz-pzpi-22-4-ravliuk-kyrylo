@@ -1,5 +1,6 @@
 package com.example.apzandroid.adapters
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,9 @@ import com.example.apzandroid.models.station_models.StationsResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.widget.ImageView;
+import androidx.appcompat.app.AppCompatActivity
+import com.example.apzandroid.fragments.MapFragment
 
 
 class StationAdapter(
@@ -53,6 +57,26 @@ class StationAdapter(
                     holder.stationStatus.text = "Немає підключення"
                 }
             })
+
+        holder.itemView.findViewById<ImageView>(R.id.goToMapClick).setOnClickListener {
+            val stationLatitude = station.latitude_location
+            val stationLongitude = station.longitude_location
+
+            val bundle = Bundle().apply {
+                putDouble("LATITUDE", stationLatitude)
+                putDouble("LONGITUDE", stationLongitude)
+            }
+
+            val mapFragment = MapFragment().apply {
+                arguments = bundle
+            }
+
+            val fragmentManager = (holder.itemView.context as AppCompatActivity).supportFragmentManager
+            fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, mapFragment)
+                .addToBackStack(null)
+                .commit()
+        }
 
         holder.containerBlock.removeAllViews()
 

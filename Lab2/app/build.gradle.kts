@@ -50,6 +50,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.0.1")
     implementation("com.google.android.gms:play-services-maps:17.0.1")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("com.prolificinteractive:material-calendarview:1.4.3")
     implementation(libs.play.services.maps)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

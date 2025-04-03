@@ -18,6 +18,7 @@ class MainMenuFragment : Fragment() {
         val profileCard = view.findViewById<CardView>(R.id.profile_view)
         val stationsCard = view.findViewById<CardView>(R.id.stations_card_view)
         val mapCard = view.findViewById<CardView>(R.id.map_interactive)
+        val scheduleCard = view.findViewById<CardView>(R.id.schedule_card)
 
         profileCard.setOnClickListener {
             parentFragmentManager.beginTransaction()
@@ -36,6 +37,13 @@ class MainMenuFragment : Fragment() {
         mapCard.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, MapFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        scheduleCard.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, ScheduleFragment())
                 .addToBackStack(null)
                 .commit()
         }

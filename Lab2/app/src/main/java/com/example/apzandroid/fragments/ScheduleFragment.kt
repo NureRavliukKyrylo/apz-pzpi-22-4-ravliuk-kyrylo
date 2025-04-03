@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,7 +28,6 @@ import java.util.*
 
 class ScheduleFragment : Fragment() {
     private lateinit var calendarView: MaterialCalendarView
-    private lateinit var eventTextView: TextView
     private lateinit var stationRecyclerView: RecyclerView
     private val scheduleDates = mutableListOf<CalendarDay>()
     private val stationNamesByDate = mutableMapOf<CalendarDay, List<Pair<String, String>>>()
@@ -40,7 +38,6 @@ class ScheduleFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.schedule_view, container, false)
         calendarView = view.findViewById(R.id.materialCalendarView)
-        eventTextView = view.findViewById(R.id.eventTextView)
         stationRecyclerView = view.findViewById(R.id.testView)
 
         stationRecyclerView.layoutManager = LinearLayoutManager(context)
@@ -50,14 +47,12 @@ class ScheduleFragment : Fragment() {
         calendarView.setOnDateChangedListener { _, date, _ ->
             val selectedDate = Calendar.getInstance()
             selectedDate.set(date.year, date.month - 1, date.day)
-            val timeInMillis = selectedDate.timeInMillis
 
             val stationNames = stationNamesByDate[date]
             if (stationNames != null && stationNames.isNotEmpty()) {
                 stationRecyclerView.adapter = StationScheduleAdapter(stationNames)
-                eventTextView.text = "Обслуговування контейнерів в ці дні:"
             } else {
-                eventTextView.text = "Немає подій"
+
             }
         }
 
@@ -111,7 +106,7 @@ class ScheduleFragment : Fragment() {
             override fun onResponse(call: Call<List<StationsResponse>>, response: Response<List<StationsResponse>>) {
                 if (response.isSuccessful) {
                     val station = response.body()?.find { it.id == stationId }
-                    callback(station?.station_of_containers_name ?: "Невідома станція")
+                    callback(station?.station_of_containers_name ?: "Unknown station")
                 } else {
                     callback("Помилка отримання станції")
                 }

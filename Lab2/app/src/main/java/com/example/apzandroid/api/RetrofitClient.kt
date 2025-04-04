@@ -3,6 +3,7 @@ import com.example.apzandroid.api.AuthService
 import com.example.apzandroid.api.ContainersService
 import com.example.apzandroid.api.ScheduleService
 import com.example.apzandroid.api.StationsService
+import com.example.apzandroid.api.WasteHistoryService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -40,6 +41,9 @@ object RetrofitClient {
     }
     val scheduleService: ScheduleService by lazy {
         retrofit.create(ScheduleService::class.java)
+    }
+    val wasteHistoryService: WasteHistoryService by lazy {
+        retrofit.create(WasteHistoryService::class.java)
     }
 
 

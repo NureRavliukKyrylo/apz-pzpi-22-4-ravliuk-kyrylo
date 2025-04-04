@@ -12,6 +12,9 @@ interface StationsService {
     @GET("api/stationOfContainers/")
     fun stations(@Header("X-CSRFToken") csrfToken: String):  Call<List<StationsResponse>>
 
+    @GET("api/stationOfContainers/{id}")
+    fun stationsId(@Header("X-CSRFToken") csrfToken: String, @Path("id") id: String):  Call<StationsResponse>
+
     @GET("api/stationOfContainersStatuses/{id}")
     fun statusStations(@Path("id") id: String, @Header("X-CSRFToken") csrfToken: String): Call<StationStatusResponse>
 

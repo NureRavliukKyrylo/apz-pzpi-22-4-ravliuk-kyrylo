@@ -10,14 +10,13 @@
         android:layout_width="387dp"
         android:layout_height="67dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="53dp"
-        android:layout_marginEnd="11dp"
+        android:layout_marginTop="86dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginBottom="11dp"
         android:backgroundTint="@android:color/white"
         android:padding="32dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/searchViewStations"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,45 +26,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Schedule"
+            android:text="Waste History"
             android:textColor="#212121"
             android:textSize="36sp"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
 
-    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-        android:id="@+id/materialCalendarView"
-        android:layout_width="407dp"
-        android:layout_height="399dp"
-        android:layout_marginTop="62dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerCard"
-        app:mcv_showOtherDates="all" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/testView"
-        android:layout_width="409dp"
-        android:layout_height="203dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCalendarView" />
-
-    <TextView
-        android:id="@+id/nothingFound"
+    <Button
+        android:id="@+id/btnPickDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="400dp"
+        android:text="Вибрати діапазон дат"
+        app:layout_constraintBottom_toBottomOf="@+id/wateHistoryRecycler"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialCalendarView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/wateHistoryRecycler"
+        android:layout_width="410dp"
+        android:layout_height="494dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/emptyTextView"
+        android:layout_width="96dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="50dp"
+        android:text="TextView"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnPickDate" />
 </androidx.constraintlayout.widget.ConstraintLayout>

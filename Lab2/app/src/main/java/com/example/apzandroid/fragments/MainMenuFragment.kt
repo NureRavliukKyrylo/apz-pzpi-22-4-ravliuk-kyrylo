@@ -19,6 +19,7 @@ class MainMenuFragment : Fragment() {
         val stationsCard = view.findViewById<CardView>(R.id.stations_card_view)
         val mapCard = view.findViewById<CardView>(R.id.map_interactive)
         val scheduleCard = view.findViewById<CardView>(R.id.schedule_card)
+        val historyCard = view.findViewById<CardView>(R.id.history_card_view)
 
         profileCard.setOnClickListener {
             parentFragmentManager.beginTransaction()
@@ -44,6 +45,13 @@ class MainMenuFragment : Fragment() {
         scheduleCard.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, ScheduleFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        historyCard.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, WasteHistoryFragment())
                 .addToBackStack(null)
                 .commit()
         }

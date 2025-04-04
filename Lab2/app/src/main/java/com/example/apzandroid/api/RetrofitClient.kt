@@ -1,6 +1,7 @@
 import com.example.apzandroid.api.AccountService
 import com.example.apzandroid.api.AuthService
 import com.example.apzandroid.api.ContainersService
+import com.example.apzandroid.api.NotificationService
 import com.example.apzandroid.api.ScheduleService
 import com.example.apzandroid.api.StationsService
 import com.example.apzandroid.api.WasteHistoryService
@@ -39,11 +40,17 @@ object RetrofitClient {
     val containersService: ContainersService by lazy {
         retrofit.create(ContainersService::class.java)
     }
+
     val scheduleService: ScheduleService by lazy {
         retrofit.create(ScheduleService::class.java)
     }
+
     val wasteHistoryService: WasteHistoryService by lazy {
         retrofit.create(WasteHistoryService::class.java)
+    }
+
+    val notificationService: NotificationService by lazy {
+        retrofit.create(NotificationService::class.java)
     }
 
 

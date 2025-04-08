@@ -10,13 +10,14 @@
         android:layout_width="387dp"
         android:layout_height="67dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="86dp"
+        android:layout_marginTop="53dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="11dp"
         android:backgroundTint="@android:color/white"
         android:padding="32dp"
         app:cardCornerRadius="24dp"
         app:cardElevation="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/searchViewStations"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -26,44 +27,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Waste History"
+            android:text="Operator Page"
             android:textColor="#212121"
             android:textSize="36sp"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewOperatorPage"
+        android:layout_width="406dp"
+        android:layout_height="369dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerCard" />
+
     <Button
-        android:id="@+id/btnPickDate"
+        android:id="@+id/getStationsReportButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="400dp"
-        android:text="Вибрати діапазон дат"
-        app:layout_constraintBottom_toBottomOf="@+id/wateHistoryRecycler"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="441dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/getWasteReportButton"
+        app:layout_constraintHorizontal_bias="0.371"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/recyclerViewOperatorPage"
+        app:layout_constraintVertical_bias="0.513" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/wateHistoryRecycler"
-        android:layout_width="410dp"
-        android:layout_height="494dp"
+    <Button
+        android:id="@+id/getWasteReportButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="553dp"
+        android:layout_marginEnd="76dp"
+        android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/emptyTextView"
-        android:layout_width="317dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="352dp"
-        android:text="Nothing was found :("
-        android:textSize="34sp"
-        android:textStyle="bold"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/wateHistoryRecycler"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnPickDate" />
+        app:layout_constraintTop_toTopOf="@+id/recyclerViewOperatorPage"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

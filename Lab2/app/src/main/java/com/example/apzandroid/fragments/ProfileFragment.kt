@@ -1,5 +1,7 @@
 package com.example.apzandroid.fragments
 
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -54,6 +56,12 @@ class ProfileFragment : Fragment() {
         csrfToken = CsrfTokenManager.getCsrfToken(requireContext()).toString()
 
         settingProfileButton = view.findViewById(R.id.editProfileButton)
+
+        val prefs = context?.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val role = prefs?.getString("user_role", "не збережено")
+
+        Log.d("ROLE_CHECK", "Роль користувача: $role")
+
 
         settingProfileButton.setOnClickListener {
             parentFragmentManager.beginTransaction()

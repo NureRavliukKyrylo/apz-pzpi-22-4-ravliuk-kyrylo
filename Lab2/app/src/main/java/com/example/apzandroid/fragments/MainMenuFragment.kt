@@ -76,6 +76,13 @@ class MainMenuFragment : Fragment() {
                         .commit()
                     true
                 }
+                R.id.nav_notifications -> {
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, NotificationsFragment())
+                        .addToBackStack(null)
+                        .commit()
+                    true
+                }
                 else -> false
             }
         }

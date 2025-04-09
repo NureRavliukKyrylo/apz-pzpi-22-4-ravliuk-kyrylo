@@ -16,6 +16,7 @@ import com.example.apzandroid.models.account_models.MySelfResponse
 import com.example.apzandroid.models.account_models.UpdateCustomerRequest
 import com.example.apzandroid.models.account_models.UpdateCustomerResponse
 import com.example.apzandroid.utils.CsrfTokenManager
+import com.example.apzandroid.helpers.profile.ProfileHelper
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -60,26 +61,16 @@ class SettingsProfileFragment : Fragment() {
     }
 
     private fun getUserProfile() {
-        RetrofitClient.accountService.myself().enqueue(object : Callback<MySelfResponse> {
-            override fun onResponse(call: Call<MySelfResponse>, response: Response<MySelfResponse>) {
-                if (response.isSuccessful) {
-                    val userProfile = response.body()
-
-                    if (userProfile != null) {
-                        usernameEditText.setText(userProfile.username.toString())
-                        emailEditText.setText(userProfile.email.toString())
-
-                        userId = userProfile.id
-                    }
-                } else {
-                    handleError("Error: ${response.code()}")
-                }
+        ProfileHelper.getUserProfile(
+            onSuccess = { userProfile ->
+                usernameEditText.setText(userProfile.username.toString())
+                emailEditText.setText(userProfile.email.toString())
+                userId = userProfile.id
+            },
+            onFailure = { errorMessage ->
+                handleError(errorMessage)
             }
-
-            override fun onFailure(call: Call<MySelfResponse>, t: Throwable) {
-                handleError("Failed to load user profile: ${t.localizedMessage}")
-            }
-        })
+        )
     }
 
     private fun updateUser() {
@@ -91,44 +82,22 @@ class SettingsProfileFragment : Fragment() {
             return
         }
 
-        val updateRequest = UpdateCustomerRequest(name, email)
-
         val csrfToken = CsrfTokenManager.getCsrfToken(requireContext())
-
         if (csrfToken == null) {
             Toast.makeText(requireContext(), "CSRF token не знайдений", Toast.LENGTH_SHORT).show()
             return
         }
 
-        RetrofitClient.accountService.updateUser(
-            userId,
-            updateRequest,
-            csrfToken
-        ).enqueue(object : Callback<UpdateCustomerResponse> {
-            override fun onResponse(call: Call<UpdateCustomerResponse>, response: Response<UpdateCustomerResponse>) {
-                Log.d("API_RESPONSE", "HTTP Code: ${response.code()}")
-                if (response.isSuccessful) {
-                    val updateResponse = response.body()
-                    Log.d("API_RESPONSE", "Response Body: $updateResponse")
-                    activity?.supportFragmentManager?.popBackStack()
-
-                    if (updateResponse != null) {
-                        Toast.makeText(requireContext(), "Дані оновлено", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(requireContext(), "Помилка оновлення", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    val errorBody = response.errorBody()?.string()
-                    Log.e("API_ERROR", "Error Body: $errorBody")
-                    Toast.makeText(requireContext(), "Помилка оновлення", Toast.LENGTH_SHORT).show()
-                }
+        ProfileHelper.updateUserProfile(
+            userId, name, email, csrfToken,
+            onSuccess = {
+                Toast.makeText(requireContext(), "Дані оновлено", Toast.LENGTH_SHORT).show()
+                activity?.supportFragmentManager?.popBackStack()
+            },
+            onFailure = { errorMessage ->
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
             }
-
-            override fun onFailure(call: Call<UpdateCustomerResponse>, t: Throwable) {
-                Log.e("API_FAILURE", "Request failed: ${t.localizedMessage}")
-                Toast.makeText(requireContext(), "Помилка підключення", Toast.LENGTH_SHORT).show()
-            }
-        })
+        )
     }
 
     private fun changePassword() {
@@ -140,32 +109,22 @@ class SettingsProfileFragment : Fragment() {
             return
         }
 
-        val changePasswordRequest = ChangePasswordRequest(oldPassword, newPassword)
         val csrfToken = CsrfTokenManager.getCsrfToken(requireContext())
-
         if (csrfToken == null) {
             Toast.makeText(requireContext(), "CSRF token не знайдений", Toast.LENGTH_SHORT).show()
             return
         }
 
-        RetrofitClient.accountService.changePassword(
-            userId,
-            changePasswordRequest,
-            csrfToken
-        ).enqueue(object : Callback<ChangePasswordResponse> {
-            override fun onResponse(call: Call<ChangePasswordResponse>, response: Response<ChangePasswordResponse>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(requireContext(), "Пароль успішно змінено", Toast.LENGTH_SHORT).show()
-                    activity?.supportFragmentManager?.popBackStack()
-                } else {
-                    Toast.makeText(requireContext(), "Помилка зміни пароля", Toast.LENGTH_SHORT).show()
-                }
+        ProfileHelper.changePassword(
+            userId, oldPassword, newPassword, csrfToken,
+            onSuccess = {
+                Toast.makeText(requireContext(), "Пароль успішно змінено", Toast.LENGTH_SHORT).show()
+                activity?.supportFragmentManager?.popBackStack()
+            },
+            onFailure = { errorMessage ->
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
             }
-
-            override fun onFailure(call: Call<ChangePasswordResponse>, t: Throwable) {
-                Toast.makeText(requireContext(), "Помилка підключення", Toast.LENGTH_SHORT).show()
-            }
-        })
+        )
     }
 
     private fun handleError(message: String) {

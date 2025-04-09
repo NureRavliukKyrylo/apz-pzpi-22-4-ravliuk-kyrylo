@@ -1,31 +1,26 @@
 package com.example.apzandroid.fragments
 
-import android.graphics.Color
 import android.os.Bundle
-import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apzandroid.R
 import com.example.apzandroid.adapters.StationScheduleAdapter
-import com.example.apzandroid.models.schedules.ScheduleResponse
-import com.example.apzandroid.models.station_models.StationsResponse
+import com.example.apzandroid.helpers.schedules.ScheduleHelper
+import com.example.apzandroid.helpers.stations.StationHelper
 import com.example.apzandroid.utils.CsrfTokenManager
 import com.example.apzandroid.utils.DateUtils
 import com.prolificinteractive.materialcalendarview.CalendarDay
-import com.prolificinteractive.materialcalendarview.DayViewDecorator
-import com.prolificinteractive.materialcalendarview.DayViewFacade
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
+import com.example.apzandroid.helpers.schedules.GreenDayDecorator
 
 class ScheduleFragment : Fragment() {
     private lateinit var calendarView: MaterialCalendarView
@@ -34,6 +29,7 @@ class ScheduleFragment : Fragment() {
     private val scheduleDates = mutableListOf<CalendarDay>()
     private val stationNamesByDate = mutableMapOf<CalendarDay, List<Pair<String, String>>>()
     private val stationNames = mutableMapOf<Int, String>()
+    private var csrfToken: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +39,7 @@ class ScheduleFragment : Fragment() {
         calendarView = view.findViewById(R.id.materialCalendarView)
         stationRecyclerView = view.findViewById(R.id.testView)
         nothingFoundTextView = view.findViewById(R.id.nothingFound)
+        csrfToken = CsrfTokenManager.getCsrfToken(requireContext()).toString()
 
         stationRecyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -67,86 +64,76 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun fetchSchedules() {
-        val csrfToken = CsrfTokenManager.getCsrfToken(requireContext())
+        val csrfToken = CsrfTokenManager.getCsrfToken(requireContext()).toString()
 
-        RetrofitClient.scheduleService.collectionSchedules(csrfToken.toString())
-            .enqueue(object : Callback<List<ScheduleResponse>> {
-                override fun onResponse(call: Call<List<ScheduleResponse>>, response: Response<List<ScheduleResponse>>) {
-                    if (response.isSuccessful) {
-                        response.body()?.let { schedules ->
-                            for (schedule in schedules) {
-                                val formattedDate = DateUtils.parseDate(schedule.collection_date)
-                                val dateFormat = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault())
+        ScheduleHelper.fetchSchedules(
+            csrfToken,
+            onSuccess = { schedules ->
+                for (schedule in schedules) {
 
-                                val date = dateFormat.parse(formattedDate)
-                                date?.let {
-                                    val calendar = Calendar.getInstance()
-                                    calendar.time = it
-                                    val calendarDay = CalendarDay.from(calendar)
+                    val stationId = schedule.station_of_containers_id
 
-                                    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-                                    val time = timeFormat.format(it)
+                    if (stationId == null || stationId == 0) {
+                        Log.w("ScheduleFragment", "Скіпнуто запис з stationId = $stationId, дата: ${schedule.collection_date}")
+                        continue
+                    }
 
-                                    if (!stationNames.containsKey(schedule.station_of_containers_id)) {
-                                        fetchStationName(schedule.station_of_containers_id) { stationName ->
-                                            stationNames[schedule.station_of_containers_id] = stationName
+                    val formattedDate = DateUtils.parseDate(schedule.collection_date)
+                    val dateFormat = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault())
+                    val date = dateFormat.parse(formattedDate)
 
-                                            val currentStationNames = stationNamesByDate[calendarDay]?.toMutableList() ?: mutableListOf()
-                                            currentStationNames.add(Pair(stationName, time))
-                                            stationNamesByDate[calendarDay] = currentStationNames
+                    date?.let {
+                        val calendar = Calendar.getInstance()
+                        calendar.time = it
+                        val calendarDay = CalendarDay.from(calendar)
 
-                                            scheduleDates.add(calendarDay)
-                                            calendarView.addDecorator(GreenDayDecorator(scheduleDates))
-                                        }
-                                    } else {
-                                        val stationName = stationNames[schedule.station_of_containers_id] ?: "Невідома станція"
-                                        val currentStationNames = stationNamesByDate[calendarDay]?.toMutableList() ?: mutableListOf()
-                                        currentStationNames.add(Pair(stationName, time))
-                                        stationNamesByDate[calendarDay] = currentStationNames
+                        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+                        val time = timeFormat.format(it)
 
-                                        scheduleDates.add(calendarDay)
-                                        calendarView.addDecorator(GreenDayDecorator(scheduleDates))
-                                    }
-                                }
+                        val stationId = schedule.station_of_containers_id
+
+                        if (!stationNames.containsKey(stationId)) {
+                            fetchStationName(stationId) { stationName ->
+                                stationNames[stationId] = stationName
+
+                                val currentList = stationNamesByDate[calendarDay]?.toMutableList() ?: mutableListOf()
+                                currentList.add(Pair(stationName, time))
+                                stationNamesByDate[calendarDay] = currentList
+
+                                scheduleDates.add(calendarDay)
+                                calendarView.addDecorator(GreenDayDecorator(scheduleDates))
                             }
+                        } else {
+                            val stationName = stationNames[stationId] ?: "Невідома станція"
+                            val currentList = stationNamesByDate[calendarDay]?.toMutableList() ?: mutableListOf()
+                            currentList.add(Pair(stationName, time))
+                            stationNamesByDate[calendarDay] = currentList
+
+                            scheduleDates.add(calendarDay)
+                            calendarView.addDecorator(GreenDayDecorator(scheduleDates))
                         }
                     }
                 }
-
-                override fun onFailure(call: Call<List<ScheduleResponse>>, t: Throwable) {
-                    Log.e("ScheduleFragment", "Помилка отримання розкладу: ${t.message}")
-                }
-            })
+            },
+            onFailure = { errorMessage ->
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+            }
+        )
     }
 
     private fun fetchStationName(stationId: Int, callback: (String) -> Unit) {
-        val csrfToken = CsrfTokenManager.getCsrfToken(requireContext())
-
-        RetrofitClient.stationsService.stationsId(csrfToken.toString(), stationId.toString())
-            .enqueue(object : Callback<StationsResponse> {
-                override fun onResponse(call: Call<StationsResponse>, response: Response<StationsResponse>) {
-                    if (response.isSuccessful) {
-                        val stationName = response.body()?.station_of_containers_name ?: "Невідома станція"
-                        callback(stationName)
-                    } else {
-                        callback("Помилка отримання станції")
-                    }
-                }
-
-                override fun onFailure(call: Call<StationsResponse>, t: Throwable) {
-                    callback("Помилка підключення")
-                }
-            })
+        StationHelper.fetchStationName(
+            csrfToken,
+            stationId,
+            onSuccess = { stationName ->
+                callback(stationName)
+            },
+            onFailure = { errorMessage ->
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                callback("Невідома станція")
+            }
+        )
     }
 
-    class GreenDayDecorator(private val dates: List<CalendarDay>) : DayViewDecorator {
-        override fun shouldDecorate(day: CalendarDay): Boolean {
-            return dates.contains(day)
-        }
-
-        override fun decorate(view: DayViewFacade) {
-            view.addSpan(ForegroundColorSpan(Color.GREEN))
-        }
-    }
 }
 

@@ -11,8 +11,8 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.example.apzandroid.R
 import com.example.apzandroid.api.StationsService
-import com.example.apzandroid.helpers.RouteDraw
-import com.example.apzandroid.helpers.StationManager
+import com.example.apzandroid.helpers.stations.RouteDraw
+import com.example.apzandroid.helpers.stations.StationsMap
 import com.example.apzandroid.utils.RouteUtil
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -28,7 +28,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var stationsService: StationsService
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var stationManager: StationManager
+    private lateinit var stationManager: StationsMap
     private lateinit var routeDrawer: RouteDraw
     private var selectedDestination: LatLng? = null
 
@@ -42,7 +42,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         stationsService = RetrofitClient.stationsService
 
-        stationManager = StationManager(requireContext(), stationsService)
+        stationManager = StationsMap(requireContext(), stationsService)
         routeDrawer = RouteDraw(this, fusedLocationClient)
 
         return view

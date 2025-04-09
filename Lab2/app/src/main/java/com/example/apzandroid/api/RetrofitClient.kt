@@ -19,7 +19,7 @@ object RetrofitClient {
         .build()
 
     private val gson = GsonBuilder()
-        .setLenient() // Додаємо lenient режим
+        .setLenient()
         .create()
 
     private val retrofit by lazy {

@@ -1,15 +1,15 @@
-package com.example.apzandroid.helpers
+package com.example.apzandroid.helpers.stations
 
 import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import com.example.apzandroid.utils.RouteUtil
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
-import androidx.fragment.app.Fragment
-import com.example.apzandroid.utils.RouteUtil
 
 class RouteDraw(private val fragment: Fragment, private val fusedLocationClient: FusedLocationProviderClient) {
 

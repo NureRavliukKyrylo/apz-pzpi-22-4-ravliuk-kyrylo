@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apzandroid.R
 import com.example.apzandroid.adapters.StationAdapter
+import com.example.apzandroid.helpers.stations.StationHelper
 import com.example.apzandroid.models.station_models.StationsResponse
 import com.example.apzandroid.utils.CsrfTokenManager
 import retrofit2.Call
@@ -47,24 +48,13 @@ class StationsFragment : Fragment() {
     }
 
     private fun loadStations() {
-        val csrfToken = CsrfTokenManager.getCsrfToken(requireContext())
-
-        RetrofitClient.stationsService.stations(csrfToken.toString()).enqueue(object : Callback<List<StationsResponse>> {
-            override fun onResponse(call: Call<List<StationsResponse>>, response: Response<List<StationsResponse>>) {
-                if (response.isSuccessful) {
-                    val stationsList = response.body() ?: emptyList()
-                    adapter = StationAdapter(stationsList, csrfToken.toString())
-                    recyclerView.adapter = adapter
-                } else {
-                    Toast.makeText(context, "Помилка завантаження станцій", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<List<StationsResponse>>, t: Throwable) {
-                Toast.makeText(context, "Помилка підключення", Toast.LENGTH_SHORT).show()
-            }
+        StationHelper.loadStations(csrfToken, { stationsList ->
+            adapter.updateData(stationsList)
+        }, { error ->
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
         })
     }
+
     private fun setupSearchView() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -86,20 +76,10 @@ class StationsFragment : Fragment() {
     }
 
     private fun searchStations(keyword: String) {
-        RetrofitClient.stationsService.searchStations(keyword, csrfToken).enqueue(object : Callback<List<StationsResponse>> {
-            override fun onResponse(call: Call<List<StationsResponse>>, response: Response<List<StationsResponse>>) {
-                if (response.isSuccessful) {
-                    val stationsList = response.body() ?: emptyList()
-                    println(response.body())
-                    adapter.updateData(stationsList)
-                } else {
-                    Toast.makeText(context, "Помилка пошуку", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<List<StationsResponse>>, t: Throwable) {
-                Toast.makeText(context, "Помилка підключення", Toast.LENGTH_SHORT).show()
-            }
+        StationHelper.searchStations(csrfToken, keyword, { stationsList ->
+            adapter.updateData(stationsList)
+        }, { error ->
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
         })
     }
 }

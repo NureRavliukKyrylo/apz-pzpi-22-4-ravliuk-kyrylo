@@ -35,35 +35,36 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewOperatorPage"
-        android:layout_width="406dp"
-        android:layout_height="369dp"
-        android:layout_marginTop="64dp"
+        android:layout_width="407dp"
+        android:layout_height="445dp"
+        android:layout_marginTop="44dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/headerCard" />
 
-    <Button
+    <ImageView
         android:id="@+id/getStationsReportButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="441dp"
+        android:layout_width="140dp"
+        android:layout_height="156dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/getWasteReportButton"
-        app:layout_constraintHorizontal_bias="0.371"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recyclerViewOperatorPage"
-        app:layout_constraintVertical_bias="0.513" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewOperatorPage"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/report_container" />
 
-    <Button
+    <ImageView
         android:id="@+id/getWasteReportButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="553dp"
-        android:layout_marginEnd="76dp"
-        android:text="Button"
+        android:layout_width="140dp"
+        android:layout_height="156dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recyclerViewOperatorPage"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintHorizontal_bias="0.254"
+        app:layout_constraintStart_toEndOf="@+id/getStationsReportButton"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewOperatorPage"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/clipboard" />
 </androidx.constraintlayout.widget.ConstraintLayout>

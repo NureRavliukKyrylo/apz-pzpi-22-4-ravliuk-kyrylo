@@ -64,7 +64,7 @@ class WasteHistoryFragment : Fragment() {
 
                 if (wasteHistoryList.isEmpty()) {
                     emptyTextView.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
+                    recyclerView.visibility = View.INVISIBLE
                     Log.d("WasteHistoryFragment", "Немає історії за вибраний період")
                 } else {
                     emptyTextView.visibility = View.GONE

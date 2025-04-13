@@ -9,12 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apzandroid.R
 import com.example.apzandroid.models.station_models.StationsResponse
-import android.widget.ImageView;
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.apzandroid.fragments.MapFragment
 import com.example.apzandroid.helpers.containers.ContainerHelper
 import com.example.apzandroid.helpers.stations.StationHelper
-
 
 class StationAdapter(
     private var stations: List<StationsResponse>,
@@ -25,6 +24,7 @@ class StationAdapter(
         val stationName: TextView = view.findViewById(R.id.stationType)
         val stationStatus: TextView = view.findViewById(R.id.stationStatus)
         val containerBlock: LinearLayout = view.findViewById(R.id.containersLayout)
+        val itemProgressBar: View = view.findViewById(R.id.itemProgressBar)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StationViewHolder {
@@ -35,12 +35,26 @@ class StationAdapter(
 
     override fun onBindViewHolder(holder: StationViewHolder, position: Int) {
         val station = stations[position]
+
+        holder.itemProgressBar.visibility = View.VISIBLE
+        holder.stationName.visibility = View.GONE
+        holder.stationStatus.visibility = View.GONE
+        holder.containerBlock.visibility = View.GONE
+
         holder.stationName.text = station.station_of_containers_name
 
         StationHelper.fetchStationStatus(csrfToken, station.status_station, { statusName ->
             holder.stationStatus.text = statusName
+            holder.itemProgressBar.visibility = View.GONE
+            holder.stationName.visibility = View.VISIBLE
+            holder.stationStatus.visibility = View.VISIBLE
+            holder.containerBlock.visibility = View.VISIBLE
         }, { error ->
             holder.stationStatus.text = error
+            holder.itemProgressBar.visibility = View.GONE
+            holder.stationName.visibility = View.VISIBLE
+            holder.stationStatus.visibility = View.VISIBLE
+            holder.containerBlock.visibility = View.VISIBLE
         })
 
         holder.itemView.findViewById<ImageView>(R.id.goToMapClick).setOnClickListener {
@@ -64,7 +78,6 @@ class StationAdapter(
         }
 
         holder.containerBlock.removeAllViews()
-
         ContainerHelper.loadContainersForStation(station.id, csrfToken, holder.containerBlock)
     }
 
@@ -75,4 +88,3 @@ class StationAdapter(
         notifyDataSetChanged()
     }
 }
-

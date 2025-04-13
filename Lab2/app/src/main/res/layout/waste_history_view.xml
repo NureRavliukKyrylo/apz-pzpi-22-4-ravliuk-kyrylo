@@ -10,9 +10,8 @@
         android:layout_width="387dp"
         android:layout_height="67dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="86dp"
+        android:layout_marginTop="46dp"
         android:layout_marginEnd="12dp"
-        android:layout_marginBottom="11dp"
         android:backgroundTint="@android:color/white"
         android:padding="32dp"
         app:cardCornerRadius="24dp"
@@ -34,36 +33,40 @@
 
     <Button
         android:id="@+id/btnPickDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="400dp"
-        android:text="Вибрати діапазон дат"
-        app:layout_constraintBottom_toBottomOf="@+id/wateHistoryRecycler"
+        android:layout_width="312dp"
+        android:layout_height="60dp"
+        android:text="Choose Range Dates"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/wateHistoryRecycler"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.474"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/headerCard"
+        app:layout_constraintVertical_bias="0.815" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/wateHistoryRecycler"
-        android:layout_width="410dp"
-        android:layout_height="494dp"
+        android:layout_width="408dp"
+        android:layout_height="588dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerCard"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/emptyTextView"
-        android:layout_width="317dp"
-        android:layout_height="43dp"
-        android:layout_marginTop="352dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Nothing was found :("
-        android:textSize="34sp"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/wateHistoryRecycler"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        android:visibility="gone"
+        android:textColor="@android:color/black"
+        android:elevation="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/btnPickDate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnPickDate" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

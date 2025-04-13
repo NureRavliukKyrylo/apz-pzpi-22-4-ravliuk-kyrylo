@@ -218,7 +218,7 @@
                     android:background="#72C85E"
                     android:gravity="center|top"
                     android:padding="16dp"
-                    android:text="Interactive container map"
+                    android:text="Interactive station map"
                     android:textColor="@android:color/white"
                     android:textSize="30sp"
                     android:textStyle="bold" />

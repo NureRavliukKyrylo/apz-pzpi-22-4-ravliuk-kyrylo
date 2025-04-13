@@ -11,6 +11,8 @@ import com.example.apzandroid.models.account_models.MySelfResponse
 import com.example.apzandroid.models.account_models.RoleResponse
 import com.example.apzandroid.utils.CsrfTokenManager
 import com.example.apzandroid.activities.MainMenu
+import com.example.apzandroid.api.AccountService.DeviceTokenRequest
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -50,7 +52,7 @@ object AuthHelper {
         })
     }
 
-    fun loginUser(context: Context, username: String, password: String) {
+    fun loginUser(context: Context, username: String, password: String, firebaseToken: String?) {
         val request = LoginRequest(username, password)
         RetrofitClient.authService.login(request).enqueue(object : Callback<LoginResponse> {
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
@@ -66,6 +68,10 @@ object AuthHelper {
                             }
                         }
                         Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                    }
+
+                    firebaseToken?.let {
+                        sendFirebaseToken(context, it)
                     }
 
                     fetchUserRoleAndNavigate(context)
@@ -115,5 +121,31 @@ object AuthHelper {
                 Toast.makeText(context, "Profile fetching error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    fun sendFirebaseToken(context: Context, token: String) {
+        val csrfToken = CsrfTokenManager.getCsrfToken(context)
+        val request = DeviceTokenRequest(token)
+
+        RetrofitClient.accountService.registerDeviceToken(request, csrfToken ?: "").enqueue(
+            object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(context, "Device token registered", Toast.LENGTH_SHORT).show()
+                    } else {
+                        val errorBody = response.errorBody()?.string() ?: "No error body"
+                        Toast.makeText(
+                            context,
+                            "Failed to register token: $errorBody",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
     }
 }

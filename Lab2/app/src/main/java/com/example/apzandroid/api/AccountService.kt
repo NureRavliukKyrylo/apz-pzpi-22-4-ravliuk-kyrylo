@@ -6,11 +6,13 @@ import com.example.apzandroid.models.account_models.MySelfResponse
 import com.example.apzandroid.models.account_models.RoleResponse
 import com.example.apzandroid.models.account_models.UpdateCustomerRequest
 import com.example.apzandroid.models.account_models.UpdateCustomerResponse
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
+import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
@@ -26,4 +28,15 @@ interface AccountService {
 
     @PATCH("api/customers/{id}/change-password/")
     fun changePassword(@Path("id") id: String, @Body request: ChangePasswordRequest, @Header("X-CSRFToken") csrfToken: String): Call<ChangePasswordResponse>
+
+   @POST("api/register-token/")
+        fun registerDeviceToken(
+            @Body request: DeviceTokenRequest,
+            @Header("X-CSRFToken") csrfToken: String
+        ): Call<ResponseBody>
+
+    data class DeviceTokenRequest(
+        val token: String
+    )
+
 }

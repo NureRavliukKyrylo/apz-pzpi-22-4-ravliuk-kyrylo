@@ -83,6 +83,13 @@ class MainMenuFragment : Fragment() {
                         .commit()
                     true
                 }
+                R.id.nav_home -> {
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, this)
+                        .addToBackStack(null)
+                        .commit()
+                    true
+                }
                 else -> false
             }
         }

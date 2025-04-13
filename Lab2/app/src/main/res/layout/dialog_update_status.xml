@@ -10,10 +10,11 @@
         android:id="@+id/dialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Оберіть новий статус"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:text="Choose new status"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <Spinner
         android:id="@+id/statusSpinner"
@@ -24,6 +25,6 @@
         android:id="@+id/confirmUpdateButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Оновити статус"
-        android:layout_marginTop="24dp" />
+        android:layout_marginTop="24dp"
+        android:text="Update Status" />
 </LinearLayout>

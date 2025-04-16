@@ -2,6 +2,7 @@ package com.example.apzandroid.helpers.auth
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import com.example.apzandroid.models.auth_models.LoginRequest
 import com.example.apzandroid.models.auth_models.LoginResponse
@@ -12,6 +13,10 @@ import com.example.apzandroid.models.account_models.RoleResponse
 import com.example.apzandroid.utils.CsrfTokenManager
 import com.example.apzandroid.activities.MainMenu
 import com.example.apzandroid.api.AccountService.DeviceTokenRequest
+import com.example.apzandroid.api.AuthService.GoogleLoginRequest
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -147,5 +152,61 @@ object AuthHelper {
                 }
             }
         )
+    }
+
+    fun firebaseAuthWithGoogle(
+        context: Context,
+        googleSignInAccount: GoogleSignInAccount
+    ) {
+        val idToken = googleSignInAccount.idToken ?: return
+
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = FirebaseAuth.getInstance().currentUser
+                    Toast.makeText(context, "Signed in as ${user?.email}", Toast.LENGTH_SHORT).show()
+
+                    val googleLoginRequest = GoogleLoginRequest(google_token = idToken)
+
+                    RetrofitClient.authService.loginGoogle(googleLoginRequest).enqueue(object : Callback<ResponseBody> {
+                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                            if (response.isSuccessful) {
+                                val cookies = response.headers().values("Set-Cookie")
+                                var csrfToken: String? = null
+
+                                if (cookies.isNotEmpty()) {
+                                    for (cookie in cookies) {
+                                        if (cookie.contains("csrftoken")) {
+                                            csrfToken = cookie.split(";")[0].split("=")[1]
+                                            CsrfTokenManager.saveCsrfToken(context, csrfToken)
+                                        }
+                                    }
+                                    Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                                }
+                                Log.d("LOGIN_GOOGLE", "Server response: ${response.code()} ${response.message()}")
+                                val body = response.body()?.string()
+                                Log.d("LOGIN_GOOGLE", "Response body: $body")
+
+                                val intent = Intent(context, MainMenu::class.java)
+                                context.startActivity(intent)
+                            } else {
+                                val errorBody = response.errorBody()?.string()
+                                Log.e("LOGIN_GOOGLE", "Error response: ${response.code()} ${response.message()}")
+                                Log.e("LOGIN_GOOGLE", "Error body: $errorBody")
+
+                                Toast.makeText(context, "Server login failed", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            Log.e("LOGIN_GOOGLE", "Network error: ${t.localizedMessage}", t)
+                            Toast.makeText(context, "Network error: ${t.localizedMessage}", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                } else {
+                    Toast.makeText(context, "Authentication Failed.", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }

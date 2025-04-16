@@ -12,10 +12,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.apzandroid.R
 import com.example.apzandroid.helpers.auth.AuthHelper
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 class RegisterActivity : AppCompatActivity() {
 
     private var isPasswordVisible = false
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private val RC_SIGN_IN = 9001
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +33,13 @@ class RegisterActivity : AppCompatActivity() {
         val emailEditText = findViewById<EditText>(R.id.registerEmail)
         val passwordEditText = findViewById<EditText>(R.id.registerPassword)
         val registerButton = findViewById<Button>(R.id.registerButton)
+        val googleRegisterButton = findViewById<ImageView>(R.id.googleRegisterButton)
         val loginLinkText = findViewById<TextView>(R.id.loginLinkText)
+
+        googleRegisterButton.setOnClickListener {
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
 
         emailEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -91,6 +104,29 @@ class RegisterActivity : AppCompatActivity() {
 
         loginLinkText.setOnClickListener {
             startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
+        }
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.let {
+                    AuthHelper.firebaseAuthWithGoogle(this, account)
+                }
+            } catch (e: ApiException) {
+                Toast.makeText(this, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }

@@ -183,6 +183,11 @@ class ProfileFragment : Fragment() {
                 Toast.makeText(context, "Push notifications updated", Toast.LENGTH_SHORT).show()
             },
             onFailure = { errorMessage ->
+                Log.e("NotificationSettings", "Error: $errorMessage")
+
+                if (errorMessage != null) {
+                    Log.e("NotificationSettings", "Server response: $errorMessage")
+                }
                 Log.e("NotificationSettings", errorMessage)
             }
         )

@@ -1,33 +1,60 @@
 package com.example.apzandroid.activities
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.text.Editable
+import android.util.Log
 import android.view.MotionEvent
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.apzandroid.R
+import com.example.apzandroid.api.AuthService.GoogleLoginRequest
 import com.example.apzandroid.helpers.auth.AuthHelper
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.messaging.FirebaseMessaging
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
 
     private var isPasswordVisible = false
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private val RC_SIGN_IN = 9001
+    private lateinit var firebaseAuth: FirebaseAuth
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_view)
 
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
         val emailEditText = findViewById<EditText>(R.id.emailLogin)
         val passwordEditText = findViewById<EditText>(R.id.passwordLogin)
         val loginButton = findViewById<Button>(R.id.loginButton)
+        val googleSignInButton = findViewById<ImageView>(R.id.googleSignInButton)
 
         emailEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -88,5 +115,25 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        googleSignInButton.setOnClickListener {
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.let {
+                    AuthHelper.firebaseAuthWithGoogle(this, account)
+                }
+            } catch (e: ApiException) {
+                Toast.makeText(this, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

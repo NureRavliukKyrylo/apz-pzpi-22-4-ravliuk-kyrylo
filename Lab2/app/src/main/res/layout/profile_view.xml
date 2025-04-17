@@ -80,10 +80,15 @@
 
                     <TextView
                         android:id="@+id/usernameTextView"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="56dp"
+                        android:layout_marginTop="66dp"
                         android:layout_marginBottom="10dp"
+                        android:ellipsize="none"
+                        android:gravity="center"
+                        android:inputType="textMultiLine"
+                        android:maxLines="3"
+                        android:singleLine="false"
                         android:textAlignment="center"
                         android:textColor="#424242"
                         android:textSize="25sp"
@@ -93,16 +98,21 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+
                     <TextView
                         android:id="@+id/emailTextView"
-                        android:layout_width="456dp"
-                        android:layout_height="42dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="22dp"
                         android:layout_marginBottom="10dp"
                         android:textAlignment="center"
                         android:textColor="#424242"
                         android:textSize="25sp"
                         android:textStyle="bold"
+                        android:singleLine="false"
+                        android:inputType="textMultiLine"
+                        android:maxLines="3"
+                        android:ellipsize="none"
                         app:layout_constraintBottom_toTopOf="@+id/roleTextView"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

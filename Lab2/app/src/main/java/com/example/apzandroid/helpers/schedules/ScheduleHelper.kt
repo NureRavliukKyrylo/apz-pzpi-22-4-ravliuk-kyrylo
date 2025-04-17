@@ -22,12 +22,12 @@ object ScheduleHelper {
                         val schedules = response.body() ?: emptyList()
                         onSuccess(schedules)
                     } else {
-                        onFailure("Помилка отримання розкладу: ${response.code()}")
+                        onFailure("Failed to get schedule: ${response.code()}")
                     }
                 }
 
                 override fun onFailure(call: Call<List<ScheduleResponse>>, t: Throwable) {
-                    onFailure("Помилка підключення: ${t.message}")
+                    onFailure("Error: ${t.message}")
                 }
             })
     }

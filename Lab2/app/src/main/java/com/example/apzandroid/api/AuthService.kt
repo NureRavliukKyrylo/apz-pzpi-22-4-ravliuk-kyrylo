@@ -1,4 +1,5 @@
 package com.example.apzandroid.api
+import com.example.apzandroid.models.auth_models.GoogleLoginRequest
 import com.example.apzandroid.models.auth_models.LoginRequest
 import com.example.apzandroid.models.auth_models.LoginResponse
 import com.example.apzandroid.models.auth_models.RegisterRequest
@@ -18,7 +19,4 @@ interface AuthService {
     @POST("api/login-google/")
     fun loginGoogle(@Body request: GoogleLoginRequest): Call<ResponseBody>
 
-    data class GoogleLoginRequest(
-        val google_token: String
-    )
 }

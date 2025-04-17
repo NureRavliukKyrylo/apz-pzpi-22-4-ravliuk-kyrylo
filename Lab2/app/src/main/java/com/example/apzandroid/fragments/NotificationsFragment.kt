@@ -43,7 +43,7 @@ class NotificationsFragment : Fragment() {
             notificationTypesMap.putAll(typesMap)
 
             adapter = NotificationsAdapter(notificationsList) { typeId ->
-                notificationTypesMap[typeId] ?: "Невідомий тип"
+                notificationTypesMap[typeId] ?: "Unknown type"
             }
             recyclerView.adapter = adapter
 

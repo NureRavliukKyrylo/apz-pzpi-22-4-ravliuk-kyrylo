@@ -12,8 +12,8 @@ import com.example.apzandroid.models.account_models.MySelfResponse
 import com.example.apzandroid.models.account_models.RoleResponse
 import com.example.apzandroid.utils.CsrfTokenManager
 import com.example.apzandroid.activities.MainMenu
-import com.example.apzandroid.api.AccountService.DeviceTokenRequest
-import com.example.apzandroid.api.AuthService.GoogleLoginRequest
+import com.example.apzandroid.models.auth_models.DeviceTokenRequest
+import com.example.apzandroid.models.auth_models.GoogleLoginRequest
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -188,8 +188,7 @@ object AuthHelper {
                                 val body = response.body()?.string()
                                 Log.d("LOGIN_GOOGLE", "Response body: $body")
 
-                                val intent = Intent(context, MainMenu::class.java)
-                                context.startActivity(intent)
+                                fetchUserRoleAndNavigate(context)
                             } else {
                                 val errorBody = response.errorBody()?.string()
                                 Log.e("LOGIN_GOOGLE", "Error response: ${response.code()} ${response.message()}")

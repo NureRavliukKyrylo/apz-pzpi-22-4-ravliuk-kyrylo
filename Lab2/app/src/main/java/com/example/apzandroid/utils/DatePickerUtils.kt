@@ -15,7 +15,7 @@ object DatePickerUtils {
         onDatesSelected: (String, String) -> Unit
     ) {
         val picker = MaterialDatePicker.Builder.dateRangePicker()
-            .setTitleText("Оберіть діапазон дат")
+            .setTitleText("Choose date range")
             .build()
 
         picker.show(fragmentManager, "DATE_RANGE_PICKER")
@@ -28,7 +28,7 @@ object DatePickerUtils {
             val start = formatter.format(Date(startMillis))
             val end = formatter.format(Date(endMillis))
 
-            Toast.makeText(context, "Обрано: $start — $end", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Chosen: $start — $end", Toast.LENGTH_SHORT).show()
             onDatesSelected(start, end)
         }
     }

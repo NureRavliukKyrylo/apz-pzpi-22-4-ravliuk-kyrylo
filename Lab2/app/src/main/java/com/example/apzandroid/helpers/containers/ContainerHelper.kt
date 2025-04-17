@@ -57,12 +57,12 @@ object ContainerHelper {
                     val containers = response.body()?.filter { it.station_id == stationId } ?: emptyList()
                     addContainersToStation(containerBlock, containers, csrfToken)
                 } else {
-                    Toast.makeText(containerBlock.context, "Помилка завантаження контейнерів", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(containerBlock.context, "Failed to load containers", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<List<ContainersResponse>>, t: Throwable) {
-                Toast.makeText(containerBlock.context, "Помилка підключення", Toast.LENGTH_SHORT).show()
+                Toast.makeText(containerBlock.context, "Failed to connect", Toast.LENGTH_SHORT).show()
             }
         })
     }

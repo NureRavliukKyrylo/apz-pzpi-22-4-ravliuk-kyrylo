@@ -29,12 +29,12 @@ object WasteHistoryHelper {
 
                         onSuccess(filteredHistory)
                     } else {
-                        onFailure("Помилка завантаження даних: ${response.errorBody()?.string()}")
+                        onFailure("Failed to load histories: ${response.errorBody()?.string()}")
                     }
                 }
 
                 override fun onFailure(call: Call<List<WasteHistoriesResponse>>, t: Throwable) {
-                    onFailure("Помилка завантаження історії: ${t.message}")
+                    onFailure("Failed to load histories: ${t.message}")
                 }
             })
     }

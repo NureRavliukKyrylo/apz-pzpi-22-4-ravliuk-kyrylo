@@ -78,20 +78,20 @@ class SettingsProfileFragment : Fragment() {
         val email = emailEditText.text.toString()
 
         if (name.isEmpty() || email.isEmpty()) {
-            Toast.makeText(requireContext(), "Заповніть всі поля", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Fill all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
         val csrfToken = CsrfTokenManager.getCsrfToken(requireContext())
         if (csrfToken == null) {
-            Toast.makeText(requireContext(), "CSRF token не знайдений", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "CSRF token is not found", Toast.LENGTH_SHORT).show()
             return
         }
 
         ProfileHelper.updateUserProfile(
             userId, name, email, csrfToken,
             onSuccess = {
-                Toast.makeText(requireContext(), "Дані оновлено", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Data updated", Toast.LENGTH_SHORT).show()
                 activity?.supportFragmentManager?.popBackStack()
             },
             onFailure = { errorMessage ->
@@ -105,20 +105,20 @@ class SettingsProfileFragment : Fragment() {
         val newPassword = newPasswordEditText.text.toString()
 
         if (oldPassword.isEmpty() || newPassword.isEmpty()) {
-            Toast.makeText(requireContext(), "Заповніть всі поля", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Fill all fields", Toast.LENGTH_SHORT).show()
             return
         }
 
         val csrfToken = CsrfTokenManager.getCsrfToken(requireContext())
         if (csrfToken == null) {
-            Toast.makeText(requireContext(), "CSRF token не знайдений", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "CSRF token not found", Toast.LENGTH_SHORT).show()
             return
         }
 
         ProfileHelper.changePassword(
             userId, oldPassword, newPassword, csrfToken,
             onSuccess = {
-                Toast.makeText(requireContext(), "Пароль успішно змінено", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Password has successfully updated", Toast.LENGTH_SHORT).show()
                 activity?.supportFragmentManager?.popBackStack()
             },
             onFailure = { errorMessage ->

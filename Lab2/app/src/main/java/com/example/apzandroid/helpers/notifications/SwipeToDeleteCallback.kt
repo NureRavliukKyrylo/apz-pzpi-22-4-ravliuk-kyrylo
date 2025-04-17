@@ -5,13 +5,13 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.apzandroid.R
 import com.example.apzandroid.models.notification_models.NotificationsResponse
 import com.example.apzandroid.utils.ConvertDp
-import com.example.apzandroid.utils.ShowToastUtils
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -39,7 +39,7 @@ class SwipeToDeleteCallback(
             notificationList.removeAt(position)
             onDelete(position)
         }, {
-            ShowToastUtils.showToast(context, "Сповіщення успішно видалено")
+            Toast.makeText(context, "Notification deleted", Toast.LENGTH_SHORT).show()
         })
     }
 

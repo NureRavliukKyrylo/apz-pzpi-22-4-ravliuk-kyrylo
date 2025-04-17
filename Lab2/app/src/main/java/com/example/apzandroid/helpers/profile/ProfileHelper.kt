@@ -23,15 +23,15 @@ object ProfileHelper {
                     if (userProfile != null) {
                         onSuccess(userProfile)
                     } else {
-                        onFailure("Не вдалося завантажити профіль")
+                        onFailure("Failed to load profile")
                     }
                 } else {
-                    onFailure("Помилка: ${response.code()}")
+                    onFailure("Error: ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<MySelfResponse>, t: Throwable) {
-                onFailure("Не вдалося підключитися: ${t.localizedMessage}")
+                onFailure("Error: ${t.localizedMessage}")
             }
         })
     }
@@ -44,12 +44,12 @@ object ProfileHelper {
                 if (response.isSuccessful) {
                     onSuccess()
                 } else {
-                    onFailure("Помилка оновлення профілю")
+                    onFailure("Failed to get profile")
                 }
             }
 
             override fun onFailure(call: Call<UpdateCustomerResponse>, t: Throwable) {
-                onFailure("Помилка підключення: ${t.localizedMessage}")
+                onFailure("Error: ${t.localizedMessage}")
             }
         })
     }
@@ -62,12 +62,12 @@ object ProfileHelper {
                 if (response.isSuccessful) {
                     onSuccess()
                 } else {
-                    onFailure("Помилка зміни пароля")
+                    onFailure("Failed to change password")
                 }
             }
 
             override fun onFailure(call: Call<ChangePasswordResponse>, t: Throwable) {
-                onFailure("Помилка підключення: ${t.localizedMessage}")
+                onFailure("Error: ${t.localizedMessage}")
             }
         })
     }
@@ -80,15 +80,15 @@ object ProfileHelper {
                     if (settings != null) {
                         onSuccess(settings)
                     } else {
-                        onFailure("Не вдалося отримати налаштування")
+                        onFailure("Failed to get settings")
                     }
                 } else {
-                    onFailure("Помилка: ${response.code()}")
+                    onFailure("Error: ${response.code()}")
                 }
             }
 
             override fun onFailure(call: Call<UserSettingsResponse>, t: Throwable) {
-                onFailure("Помилка підключення: ${t.localizedMessage}")
+                onFailure("Error: ${t.localizedMessage}")
             }
         })
     }
@@ -99,12 +99,12 @@ object ProfileHelper {
                 if (response.isSuccessful) {
                     onSuccess()
                 } else {
-                    onFailure("Помилка зміни налаштувань пошти")
+                    onFailure("Failed to update email")
                 }
             }
 
             override fun onFailure(call: Call<ToggleEmailResponse>, t: Throwable) {
-                onFailure("Помилка підключення: ${t.localizedMessage}")
+                onFailure("Error: ${t.localizedMessage}")
             }
         })
     }
@@ -115,12 +115,12 @@ object ProfileHelper {
                 if (response.isSuccessful) {
                     onSuccess()
                 } else {
-                    onFailure("Помилка зміни налаштувань пуш-повідомлень")
+                    onFailure("Failed to update")
                 }
             }
 
             override fun onFailure(call: Call<TogglePushResponse>, t: Throwable) {
-                onFailure("Помилка підключення: ${t.localizedMessage}")
+                onFailure("Error: ${t.localizedMessage}")
             }
         })
     }

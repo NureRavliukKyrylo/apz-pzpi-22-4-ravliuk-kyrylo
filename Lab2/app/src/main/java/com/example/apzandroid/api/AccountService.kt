@@ -6,6 +6,7 @@ import com.example.apzandroid.models.account_models.MySelfResponse
 import com.example.apzandroid.models.account_models.RoleResponse
 import com.example.apzandroid.models.account_models.UpdateCustomerRequest
 import com.example.apzandroid.models.account_models.UpdateCustomerResponse
+import com.example.apzandroid.models.auth_models.DeviceTokenRequest
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
@@ -34,9 +35,4 @@ interface AccountService {
             @Body request: DeviceTokenRequest,
             @Header("X-CSRFToken") csrfToken: String
         ): Call<ResponseBody>
-
-    data class DeviceTokenRequest(
-        val token: String
-    )
-
 }

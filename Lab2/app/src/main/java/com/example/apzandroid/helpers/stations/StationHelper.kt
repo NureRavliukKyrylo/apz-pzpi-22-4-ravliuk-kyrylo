@@ -20,12 +20,12 @@ object StationHelper {
                     val stationsList = response.body() ?: emptyList()
                     onSuccess(stationsList)
                 } else {
-                    onFailure("Помилка завантаження станцій")
+                    onFailure("Failed to load stations")
                 }
             }
 
             override fun onFailure(call: Call<List<StationsResponse>>, t: Throwable) {
-                onFailure("Помилка підключення: ${t.message}")
+                onFailure("Error: ${t.message}")
             }
         })
     }
@@ -37,12 +37,12 @@ object StationHelper {
                     val stationsList = response.body() ?: emptyList()
                     onSuccess(stationsList)
                 } else {
-                    onFailure("Помилка пошуку станцій")
+                    onFailure("Failed to search stations")
                 }
             }
 
             override fun onFailure(call: Call<List<StationsResponse>>, t: Throwable) {
-                onFailure("Помилка підключення: ${t.message}")
+                onFailure("Error: ${t.message}")
             }
         })
     }
@@ -54,12 +54,12 @@ object StationHelper {
                     val stationName = response.body()?.station_of_containers_name ?: "Невідома станція"
                     onSuccess(stationName)
                 } else {
-                    onFailure("Помилка отримання станції")
+                    onFailure("Failed to get station name")
                 }
             }
 
             override fun onFailure(call: Call<StationsResponse>, t: Throwable) {
-                onFailure("Помилка підключення: ${t.message}")
+                onFailure("Error: ${t.message}")
             }
         })
     }
@@ -71,12 +71,12 @@ object StationHelper {
                     val statusName = response.body()?.station_status_name ?: "Unknown"
                     callback(statusName)
                 } else {
-                    errorCallback("Помилка отримання статусу станції")
+                    errorCallback("Failed to get status station")
                 }
             }
 
             override fun onFailure(call: Call<StationStatusResponse>, t: Throwable) {
-                errorCallback("Немає підключення")
+                errorCallback("No connection")
             }
         })
     }
@@ -99,12 +99,12 @@ object StationHelper {
                 if (response.isSuccessful) {
                     onSuccess()
                 } else {
-                    onFailure("Помилка при оновленні")
+                    onFailure("Failde to update")
                 }
             }
 
             override fun onFailure(call: Call<StationsResponse>, t: Throwable) {
-                onFailure("Помилка: ${t.message}")
+                onFailure("Error: ${t.message}")
             }
         })
     }
@@ -126,12 +126,12 @@ object StationHelper {
 
                     onStatusesLoaded(statuses)
                 } else {
-                    Toast.makeText(context, "Не вдалося завантажити статуси", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Failed to fetch statuses", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<List<StationStatusResponse>>, t: Throwable) {
-                Toast.makeText(context, "Помилка при завантаженні статусів: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error fetching: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }

@@ -34,7 +34,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private fun showNotification(title: String?, message: String?) {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        val channelId = "my_channel_id"
+        val channelId = "notification_channel"
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -46,9 +46,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         val notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle(title ?: "Без заголовка")
-            .setContentText(message ?: "Без тексту")
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle(title ?: "No title")
+            .setContentText(message ?: "No text")
+            .setSmallIcon(R.drawable.notification_delete)
             .setAutoCancel(true)
             .build()
 

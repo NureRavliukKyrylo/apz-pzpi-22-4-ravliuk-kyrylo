@@ -103,7 +103,7 @@ class OperatorPageStationAdapter(
         StationHelper.updateStationStatus(csrfToken, stationId, selectedStatusId,
             onSuccess = {
                 updateStation(stationId, selectedStatusId)
-                Toast.makeText(context, "Статус оновлено", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Status successfully updated", Toast.LENGTH_SHORT).show()
                 alertDialog.dismiss()
             },
             onFailure = { errorMessage ->

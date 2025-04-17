@@ -1,9 +1,9 @@
 package com.example.apzandroid.helpers.notifications
 
 import android.content.Context
+import android.widget.Toast
 import com.example.apzandroid.models.notification_models.NotificationTypeResponse
 import com.example.apzandroid.models.notification_models.NotificationsResponse
-import com.example.apzandroid.utils.ShowToastUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,12 +26,12 @@ class NotificationHelper {
                             val notifications = response.body() ?: emptyList()
                             loadNotificationTypes(notifications, csrfToken, context, callback)
                         } else {
-                            ShowToastUtils.showToast(context, "Помилка завантаження сповіщень")
+                            Toast.makeText(context, "Failed to load notifications", Toast.LENGTH_SHORT).show()
                         }
                     }
 
                     override fun onFailure(call: Call<List<NotificationsResponse>>, t: Throwable) {
-                        ShowToastUtils.showToast(context, "Помилка: ${t.message}")
+                        Toast.makeText(context, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                 })
         }
@@ -89,15 +89,15 @@ class NotificationHelper {
                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                         if (response.isSuccessful) {
                             onSuccess()
-                            ShowToastUtils.showToast(context, "Успішно Видалено")
+                            Toast.makeText(context, "Deleted succesfully", Toast.LENGTH_SHORT).show()
                         } else {
-                            ShowToastUtils.showToast(context, "Не вдалося видалити")
+                            Toast.makeText(context, "Failed to delete", Toast.LENGTH_SHORT).show()
                             onFailure()
                         }
                     }
 
                     override fun onFailure(call: Call<Void>, t: Throwable) {
-                        ShowToastUtils.showToast(context, "Помилка при видаленні")
+                        Toast.makeText(context, "Failed to delete", Toast.LENGTH_SHORT).show()
                         onFailure()
                     }
                 })

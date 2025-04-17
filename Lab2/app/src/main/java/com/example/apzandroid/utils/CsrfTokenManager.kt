@@ -17,10 +17,4 @@ object CsrfTokenManager {
         return sharedPreferences.getString("csrf_token", null)
     }
 
-    fun clearCsrfToken(context: Context) {
-        val sharedPreferences = context.getSharedPreferences("CookiePrefs", AppCompatActivity.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.remove("csrf_token")
-        editor.apply()
-    }
 }

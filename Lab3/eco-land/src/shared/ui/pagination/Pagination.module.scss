@@ -1,0 +1,28 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 24px;
+  gap: 8px;
+
+  button {
+    background: none;
+    border: none;
+    color: #9de19d;
+    width: 32px;
+    height: 32px;
+    border-radius: 9999px;
+    cursor: pointer;
+
+    &.active-page,
+    &.activePage {
+      background-color: #1c2b23;
+      color: white;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+  }
+}

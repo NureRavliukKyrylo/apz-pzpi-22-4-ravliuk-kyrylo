@@ -1,6 +1,6 @@
 export type User = {
-  id: Number;
-  username: String;
+  id: number;
+  username: string;
   email: String;
   role: number;
   date_joined: String;

@@ -1,4 +1,5 @@
 import { authApi } from "features/auth/api/authApi";
+import { Navbar } from "widgets/navbar/Navbar";
 
 const AdminPage = () => {
   const handleClick = async () => {
@@ -11,9 +12,12 @@ const AdminPage = () => {
   };
 
   return (
-    <h1 onClick={handleClick} style={{ cursor: "pointer" }}>
-      Hello
-    </h1>
+    <>
+      <Navbar />
+      <h1 onClick={handleClick} style={{ cursor: "pointer" }}>
+        Hello
+      </h1>
+    </>
   );
 };
 

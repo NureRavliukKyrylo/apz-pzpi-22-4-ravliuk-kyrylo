@@ -7,6 +7,8 @@ import {
 import LoginPage from "../pages/auth/LoginPage";
 import AdminPage from "../pages/AdminPage";
 import { JSX } from "react";
+import { NavigationMenu } from "widgets/navigationManage/NavigationMenu";
+import UsersPage from "pages/users/UsersPage";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const accessToken = localStorage.getItem("access_token");
@@ -26,6 +28,7 @@ const App = () => {
             </PrivateRoute>
           }
         />
+        <Route path="/users" element={<UsersPage />} />
       </Routes>
     </Router>
   );

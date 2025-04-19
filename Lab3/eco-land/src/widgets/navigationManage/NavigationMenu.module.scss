@@ -1,0 +1,71 @@
+.container {
+  display: flex;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  background-color: #121712;
+  margin-right: 50px;
+  border: 1px solid WHITE;
+  border-radius: 20px;
+  padding: 20px;
+  width: 200px;
+  height: 600px;
+
+  h1 {
+    color: white;
+    font-weight: 900;
+  }
+}
+
+.menuButton {
+  background-color: #3b4c41;
+  color: white;
+  border: none;
+  padding: 10px;
+  text-align: left;
+  font-size: 20px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  font-weight: 900;
+
+  &:hover {
+    background-color: #4c5c49;
+  }
+
+  &.active {
+    background-color: #5a6c58;
+  }
+}
+
+.content {
+  flex-grow: 1;
+  border-radius: 8px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.addRole {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  border: 1px solid black;
+  background: #ffffff;
+  border-radius: 40px;
+  height: 40px;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 900;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: #57cf12;
+  }
+}

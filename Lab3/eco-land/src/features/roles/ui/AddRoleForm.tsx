@@ -4,6 +4,7 @@ import { ModalLayout } from "shared/ui/modalLayout/ModalLayout";
 import styles from "./AddRoleForm.module.scss";
 import { useErrorStore } from "entities/error/useErrorStore";
 import { AxiosError } from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 type AddRoleFormProps = {
   isOpen: boolean;
@@ -14,6 +15,7 @@ export const AddRoleForm = ({ isOpen, onClose }: AddRoleFormProps) => {
   const [roleName, setRoleName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { error, setError } = useErrorStore();
+  const queryClient = useQueryClient();
 
   const handleAddRole = async () => {
     if (roleName.trim() === "") {
@@ -24,6 +26,9 @@ export const AddRoleForm = ({ isOpen, onClose }: AddRoleFormProps) => {
     setIsLoading(true);
     try {
       await rolesApi.addRole(roleName);
+
+      queryClient.invalidateQueries({ queryKey: ["roles"] });
+
       setRoleName("");
       setError("");
       onClose();

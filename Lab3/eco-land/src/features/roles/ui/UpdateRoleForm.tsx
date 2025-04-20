@@ -4,6 +4,7 @@ import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import styles from "./UpdateRoleForm.module.scss";
 import { useErrorStore } from "entities/error/useErrorStore";
 import { AxiosError } from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 type UpdateRoleFormProps = {
   roleId: number;
@@ -21,6 +22,7 @@ export const UpdateRoleForm = ({
   const [roleName, setRoleName] = useState(currentRoleName);
   const [isLoading, setIsLoading] = useState(false);
   const { error, setError } = useErrorStore();
+  const queryClient = useQueryClient();
 
   const handleChangeRoleName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRoleName(event.target.value);
@@ -35,20 +37,16 @@ export const UpdateRoleForm = ({
     setIsLoading(true);
     try {
       await rolesApi.updateRole(roleId, roleName);
+
+      queryClient.invalidateQueries({ queryKey: ["roles"] });
+
       onSuccess();
       onClose();
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.error("Axios error response:", error.response);
-
         const detail =
           error.response?.data?.error || error.response?.data?.message;
-
-        if (detail) {
-          setError(detail);
-        } else {
-          setError("Failed to add role.");
-        }
+        setError(detail ?? "Failed to update role.");
       } else {
         setError("An unexpected error occurred.");
       }

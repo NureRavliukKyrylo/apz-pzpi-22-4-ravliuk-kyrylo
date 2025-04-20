@@ -1,4 +1,4 @@
-.usersContainer {
+.stationStatusContainer {
   background-color: #101c14;
   padding: 1rem;
   border-radius: 40px;
@@ -8,6 +8,7 @@
   width: 100%;
   min-height: 700px;
   height: 100%;
+
   h1 {
     display: flex;
     justify-content: center;
@@ -18,7 +19,7 @@
   }
 }
 
-.usersTable {
+.stationStatusTable {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
@@ -44,7 +45,24 @@
   }
 }
 
-.roleChip {
+.changeBtn {
+  color: #9de19d;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.error {
+  color: red;
+  font-size: 18px;
+  text-align: center;
+}
+
+.stationStatusChip {
   display: inline-block;
   background-color: #1c2b23;
   padding: 6px 16px;
@@ -54,21 +72,25 @@
   color: white;
 }
 
-.admin {
-  background-color: #1c2b23;
+.active {
+  background-color: #4caf50;
+}
+.inactive {
+  background-color: #f44336;
+}
+.maintenance {
+  background-color: #ffc107;
 }
 
-.user {
-  background-color: #1c2b23;
-}
-
-.changeBtn {
-  color: #9de19d;
-  background: none;
-  border: none;
+.deleteBtn {
+  background-color: #f44336;
+  color: white;
+  border-radius: 8px;
+  padding: 8px 16px;
   cursor: pointer;
+  border: none;
 
   &:hover {
-    text-decoration: underline;
+    background-color: #e53935;
   }
 }

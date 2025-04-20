@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRolesQuery } from "../model/useRolesQuery";
 import { Pagination } from "shared/ui/pagination/Pagination";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
-import { DeleteButton } from "shared/ui/deleteButton/deleteButton";
+import { DeleteButton } from "shared/ui/buttons/deleteButton/deleteButton";
 import { rolesApi } from "../api/rolesApi";
 import { ModalLayout } from "shared/ui/modalLayout/ModalLayout";
 import { UpdateRoleForm } from "./UpdateRoleForm";

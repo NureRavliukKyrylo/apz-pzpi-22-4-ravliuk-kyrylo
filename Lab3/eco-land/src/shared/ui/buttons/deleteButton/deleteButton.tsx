@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ModalLayout } from "../modalLayout/ModalLayout";
+import { ModalLayout } from "../../modalLayout/ModalLayout";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import styles from "./DeleteButton.module.scss";
 

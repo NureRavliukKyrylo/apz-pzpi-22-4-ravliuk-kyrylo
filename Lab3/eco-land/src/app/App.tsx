@@ -7,8 +7,9 @@ import {
 import LoginPage from "../pages/auth/LoginPage";
 import AdminPage from "../pages/AdminPage";
 import { JSX } from "react";
-import { NavigationMenu } from "widgets/navigationManage/NavigationMenu";
 import UsersPage from "pages/users/UsersPage";
+import { StationStatusesTable } from "features/stations/ui/StationStatusesTable";
+import StationsPage from "pages/stations/StationsPage";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const accessToken = localStorage.getItem("access_token");
@@ -29,6 +30,7 @@ const App = () => {
           }
         />
         <Route path="/users" element={<UsersPage />} />
+        <Route path="/stations" element={<StationsPage />} />
       </Routes>
     </Router>
   );

@@ -1,16 +1,16 @@
 import UsersLayout from "shared/layouts/users/UsersLayout";
-import { NavigationMenu } from "widgets/navigationManage/stations/NavigationMenu";
+import { NavigationMenuStations } from "widgets/navigationManage/stations/NavigationMenuStations";
 import { Navbar } from "widgets/navbar/Navbar";
 
-const UsersPage = () => {
+const StationsPage = () => {
   return (
     <>
       <Navbar />
       <UsersLayout>
-        <NavigationMenu />
+        <NavigationMenuStations />
       </UsersLayout>
     </>
   );
 };
 
-export default UsersPage;
+export default StationsPage;

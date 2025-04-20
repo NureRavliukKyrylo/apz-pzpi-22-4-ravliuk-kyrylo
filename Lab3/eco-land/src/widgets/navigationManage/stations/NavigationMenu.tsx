@@ -3,6 +3,7 @@ import { RolesTable } from "features/roles/ui/RolesTable";
 import { UsersTable } from "features/users/ui/UserTable";
 import styles from "./NavigationMenu.module.scss";
 import { AddRoleForm } from "features/roles/ui/AddRoleForm";
+import { AddButton } from "shared/ui/buttons/addButton/AddButton";
 
 export const NavigationMenu = () => {
   const [activeTab, setActiveTab] = useState<"roles" | "users">("roles");
@@ -40,9 +41,7 @@ export const NavigationMenu = () => {
         >
           Users
         </button>
-        <button className={styles.addRole} onClick={handleAddRoleClick}>
-          Add new role
-        </button>
+        <AddButton onClick={handleAddRoleClick}>Add new role</AddButton>
       </div>
 
       <div className={styles.content}>

@@ -1,4 +1,4 @@
-.usersContainer {
+.stationsContainer {
   background-color: #101c14;
   padding: 1rem;
   border-radius: 40px;
@@ -8,6 +8,7 @@
   width: 100%;
   min-height: 700px;
   height: 100%;
+
   h1 {
     display: flex;
     justify-content: center;
@@ -18,7 +19,7 @@
   }
 }
 
-.usersTable {
+.stationsTable {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
@@ -44,7 +45,7 @@
   }
 }
 
-.roleChip {
+.statusChip {
   display: inline-block;
   background-color: #1c2b23;
   padding: 6px 16px;
@@ -54,12 +55,14 @@
   color: white;
 }
 
-.admin {
-  background-color: #1c2b23;
+.active {
+  background-color: #4caf50;
 }
-
-.user {
-  background-color: #1c2b23;
+.inactive {
+  background-color: #f44336;
+}
+.maintenance {
+  background-color: #ffc107;
 }
 
 .changeBtn {

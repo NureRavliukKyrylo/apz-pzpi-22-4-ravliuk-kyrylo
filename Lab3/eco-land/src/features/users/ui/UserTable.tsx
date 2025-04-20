@@ -5,7 +5,7 @@ import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import { ModalLayout } from "shared/ui/modalLayout/ModalLayout";
 import { UpdateRoleForm } from "./UpdateRoleForm";
 import { Pagination } from "shared/ui/pagination/Pagination";
-import { DeleteButton } from "shared/ui/deleteButton/deleteButton";
+import { DeleteButton } from "shared/ui/buttons/deleteButton/deleteButton";
 import { usersApi } from "../api/usersApi";
 
 const USERS_PER_PAGE = 8;
@@ -34,82 +34,86 @@ export const UsersTable = () => {
     setSelectedUser(null);
   };
 
+  if (isLoading || isFetching) {
+    return (
+      <div className={styles.usersContainer}>
+        <SpinnerLoading centered />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className={styles.usersContainer}>
+        <div className={styles.error}>Error fetching users.</div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.usersContainer}>
-      {isLoading ? (
-        <SpinnerLoading centered />
-      ) : isError ? (
-        <div className={styles.error}>Error fetching users.</div>
-      ) : (
-        <>
-          <h1>Users</h1>
-          <table className={styles.usersTable}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
-                <th>Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentUsers.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.username}</td>
-                  <td>{user.email}</td>
-                  <td>
-                    <span
-                      className={`${styles.roleChip} ${
-                        styles[user.roleName.toLowerCase()]
-                      }`}
-                    >
-                      {user.roleName}
-                    </span>
-                  </td>
-                  <td>
-                    <button
-                      className={styles.changeBtn}
-                      onClick={() =>
-                        handleOpenModal(Number(user.id), user.role)
-                      }
-                    >
-                      Change Role
-                    </button>
-                  </td>
-                  <td>
-                    <DeleteButton
-                      id={user.id}
-                      deleteFn={usersApi.deleteUser}
-                      label="User"
-                      data={user.username}
-                      onSuccess={() => setPage(1)}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      <h1>Users</h1>
+      <table className={styles.usersTable}>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentUsers.map((user) => (
+            <tr key={user.id}>
+              <td>{user.username}</td>
+              <td>{user.email}</td>
+              <td>
+                <span
+                  className={`${styles.roleChip} ${
+                    styles[user.roleName.toLowerCase()]
+                  }`}
+                >
+                  {user.roleName}
+                </span>
+              </td>
+              <td>
+                <button
+                  className={styles.changeBtn}
+                  onClick={() => handleOpenModal(Number(user.id), user.role)}
+                >
+                  Change Role
+                </button>
+              </td>
+              <td>
+                <DeleteButton
+                  id={user.id}
+                  deleteFn={usersApi.deleteUser}
+                  label="User"
+                  data={user.username}
+                  onSuccess={() => setPage(1)}
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-          <ModalLayout isOpen={isModalOpen} onClose={handleCloseModal}>
-            {selectedUser && (
-              <UpdateRoleForm
-                userId={selectedUser.id}
-                currentRole={selectedUser.role}
-                onClose={handleCloseModal}
-              />
-            )}
-          </ModalLayout>
-
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
+      <ModalLayout isOpen={isModalOpen} onClose={handleCloseModal}>
+        {selectedUser && (
+          <UpdateRoleForm
+            userId={selectedUser.id}
+            currentRole={selectedUser.role}
+            onClose={handleCloseModal}
           />
+        )}
+      </ModalLayout>
 
-          {isFetching && <SpinnerLoading overlay />}
-        </>
-      )}
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
   );
 };

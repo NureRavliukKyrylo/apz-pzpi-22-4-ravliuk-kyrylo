@@ -37,8 +37,10 @@ class RegisterActivity : AppCompatActivity() {
         val loginLinkText = findViewById<TextView>(R.id.loginLinkText)
 
         googleRegisterButton.setOnClickListener {
-            val signInIntent = googleSignInClient.signInIntent
-            startActivityForResult(signInIntent, RC_SIGN_IN)
+            googleSignInClient.signOut().addOnCompleteListener {
+                val signInIntent = googleSignInClient.signInIntent
+                startActivityForResult(signInIntent, RC_SIGN_IN)
+            }
         }
 
         emailEditText.addTextChangedListener(object : TextWatcher {

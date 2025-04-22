@@ -83,13 +83,6 @@ class ProfileFragment : Fragment() {
             }
         }, 500)
 
-        emailNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            toggleEmailNotifications()
-        }
-
-        pushNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            togglePushNotifications()
-        }
     }
 
     private fun getUserProfile() {
@@ -137,6 +130,7 @@ class ProfileFragment : Fragment() {
                 emailNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
                     toggleEmailNotifications()
                 }
+
                 pushNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
                     togglePushNotifications()
                 }

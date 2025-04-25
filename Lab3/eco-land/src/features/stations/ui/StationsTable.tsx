@@ -12,7 +12,12 @@ const STATIONS_PER_PAGE = 8;
 
 export const StationsTable = () => {
   const [page, setPage] = useState(1);
-  const { data: stations, isLoading, isError, isFetching } = useStationsQuery();
+  const {
+    data: stations,
+    isLoading,
+    isError,
+    isFetching,
+  } = useStationsQuery(page);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStation, setSelectedStation] = useState<{

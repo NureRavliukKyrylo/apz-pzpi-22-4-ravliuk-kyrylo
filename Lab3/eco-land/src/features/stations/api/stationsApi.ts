@@ -6,6 +6,14 @@ export const stationApi = {
     const response = await apiClient.get<Station[]>("/stationOfContainers/");
     return response.data;
   },
+
+  getStationById: async (id: number): Promise<Station> => {
+    const response = await apiClient.get<Station>(
+      `/stationOfContainers/${id}/`
+    );
+    return response.data;
+  },
+
   getAllStationStatuses: async (): Promise<StationStatus[]> => {
     const response = await apiClient.get<StationStatus[]>(
       "/stationOfContainersStatuses/"

@@ -47,6 +47,11 @@ export const containerApi = {
     return response.data;
   },
 
+  getContainerById: async (id: number): Promise<Container> => {
+    const response = await apiClient.get<Container>(`/containers/${id}/`);
+    return response.data;
+  },
+
   addContainerStatus: async (status_name: string): Promise<void> => {
     await apiClient.post("/statusOfContainers/", {
       status_name,

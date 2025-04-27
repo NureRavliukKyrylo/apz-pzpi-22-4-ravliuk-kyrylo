@@ -17,11 +17,11 @@ export type EnrichedContainer = Container & {
   volume: number;
 };
 
-export const useContainersQuery = (page: number) => {
+export const useContainersQuery = (page?: number) => {
   const previousData = useRef<EnrichedContainer[] | null>(null);
 
   const query = useQuery<EnrichedContainer[]>({
-    queryKey: ["containers", page],
+    queryKey: page !== undefined ? ["containers", page] : ["containers"],
     queryFn: async () => {
       const rawContainers = await containerApi.getAllContainers();
 

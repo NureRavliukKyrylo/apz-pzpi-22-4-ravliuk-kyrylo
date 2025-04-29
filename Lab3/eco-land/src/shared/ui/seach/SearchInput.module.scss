@@ -1,0 +1,30 @@
+.input {
+  width: 50%;
+  padding: 10px 12px 10px 10px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background-color: #262824;
+  color: #ffffff;
+
+  &:focus {
+    border-color: #4f46e5;
+    background-color: #262824;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  }
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='gray' viewBox='0 0 24 24'><path d='M10 2a8 8 0 105.293 14.707l5.147 5.146 1.414-1.414-5.146-5.147A8 8 0 0010 2zm0 2a6 6 0 110 12A6 6 0 0110 4z'/></svg>");
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+}

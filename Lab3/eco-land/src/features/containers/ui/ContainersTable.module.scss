@@ -18,7 +18,12 @@
     font-size: 40px;
   }
 }
-
+.controls {
+  display: flex;
+  margin-bottom: 30px;
+  justify-content: center;
+  gap: 20px;
+}
 .containersTable {
   width: 100%;
   border-collapse: collapse;

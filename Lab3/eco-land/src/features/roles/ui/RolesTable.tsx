@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRolesQuery } from "../model/useRolesQuery";
+import { useRolesParamsQuery } from "../model/useRolesQuery";
 import { Pagination } from "shared/ui/pagination/Pagination";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import { DeleteButton } from "shared/ui/buttons/deleteButton/deleteButton";
@@ -12,16 +12,18 @@ const ROLES_PER_PAGE = 8;
 
 export const RolesTable = () => {
   const [page, setPage] = useState(1);
-  const { data: roles, isLoading, isError, isFetching } = useRolesQuery(page);
+  const { data, isLoading, isError, isFetching } = useRolesParamsQuery(page);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<{
     id: number;
     name: string;
   } | null>(null);
 
-  const totalPages = Math.ceil((roles?.length ?? 0) / ROLES_PER_PAGE);
+  const roles = data?.results ?? [];
+
+  const totalPages = Math.ceil((data?.count ?? 0) / ROLES_PER_PAGE);
   const start = (page - 1) * ROLES_PER_PAGE;
-  const currentRoles = roles?.slice(start, start + ROLES_PER_PAGE) ?? [];
+  const currentRoles = roles ?? [];
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);

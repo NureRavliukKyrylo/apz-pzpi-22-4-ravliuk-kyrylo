@@ -1,18 +1,17 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { containerApi } from "../api/containersApi";
+import { collectionScheduleApi } from "../api/schedulesApi";
 import { AxiosError } from "axios";
 
-export const useAddContainer = () => {
+export const useAddSchedule = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: {
-      station_id: number;
-      type_of_container_id: number;
-      status_container_id: number;
-    }) => containerApi.addContainer(data),
+      station_of_containers_id: number;
+      collection_date: string;
+    }) => collectionScheduleApi.addSchedule(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["containers"] });
+      queryClient.invalidateQueries({ queryKey: ["collectionSchedules"] });
     },
     onError: (error) => {
       console.error("Add station error:", error);

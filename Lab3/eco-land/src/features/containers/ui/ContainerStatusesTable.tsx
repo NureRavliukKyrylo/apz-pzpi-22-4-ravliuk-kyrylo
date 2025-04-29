@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useContainerStatusesQuery } from "../model/useContainerStatusesQuery";
+import { useContainerStatusesParamsQuery } from "../model/useContainerStatusesQuery";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import { DeleteButton } from "shared/ui/buttons/deleteButton/deleteButton";
 import { containerApi } from "../api/containersApi";
@@ -18,16 +18,14 @@ export const ContainerStatusesTable = () => {
     status_name: string;
   } | null>(null);
 
-  const {
-    data: statuses,
-    isLoading,
-    isError,
-    refetch,
-  } = useContainerStatusesQuery();
+  const { data, isLoading, isError, refetch } =
+    useContainerStatusesParamsQuery(page);
 
-  const totalPages = Math.ceil((statuses?.length ?? 0) / STATUS_PER_PAGE);
+  const containerStatuses = data?.results ?? [];
+
+  const totalPages = Math.ceil((data?.count ?? 0) / STATUS_PER_PAGE);
   const start = (page - 1) * STATUS_PER_PAGE;
-  const currentStatuses = statuses?.slice(start, start + STATUS_PER_PAGE) ?? [];
+  const currentStatuses = containerStatuses ?? [];
 
   if (isLoading) {
     return <SpinnerLoading centered />;

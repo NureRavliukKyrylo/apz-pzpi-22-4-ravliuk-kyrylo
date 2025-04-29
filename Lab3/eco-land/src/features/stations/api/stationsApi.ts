@@ -1,5 +1,6 @@
 import { apiClient } from "shared/api/apiClient";
 import { Station, StationStatus } from "entities/station/stationTypes";
+import { PaginatedStationStatusesResponse } from "../model/useStationStatusesQuery";
 
 export const stationApi = {
   getAllStations: async (): Promise<Station[]> => {
@@ -61,5 +62,21 @@ export const stationApi = {
     await apiClient.put(`/stationOfContainersStatuses/${statusId}/`, {
       station_status_name: statusName,
     });
+  },
+
+  getStationsWithParams: async (
+    params: string
+  ): Promise<{ results: Station[]; count: number }> => {
+    const response = await apiClient.get(`/stationOfContainers/?${params}`);
+    return response.data;
+  },
+
+  getStationStatusesWithParams: async (
+    params: string
+  ): Promise<PaginatedStationStatusesResponse> => {
+    const response = await apiClient.get<PaginatedStationStatusesResponse>(
+      `/stationOfContainersStatuses/?${params}`
+    );
+    return response.data;
   },
 };

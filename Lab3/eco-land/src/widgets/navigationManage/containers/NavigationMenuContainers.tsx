@@ -10,6 +10,7 @@ import { ContainerStatusesTable } from "features/containers/ui/ContainerStatuses
 import { ContainerTypesTable } from "features/containers/ui/ContainerTypesTable";
 import { AddContainerStatusForm } from "features/containers/ui/AddContainerStatusForm";
 import { AddContainerTypeForm } from "features/containers/ui/AddContainerTypeForm";
+import { useStationsQuery } from "features/stations/model/useStationsQuery";
 
 export const NavigationMenuContainers = () => {
   const [activeTab, setActiveTab] = useState<
@@ -45,17 +46,23 @@ export const NavigationMenuContainers = () => {
     setActiveTab(tab);
   };
 
-  const { data: statusData = [] } = useContainerStatusesQuery();
   const { data: typeData = [] } = useContainerTypesQuery();
-
-  const statusOptions = (statusData ?? []).map((s) => ({
-    id: s.id,
-    name: s.status_name,
-  }));
+  const { data: stations = [] } = useStationsQuery();
+  const { data: statusesData = [] } = useContainerStatusesQuery();
 
   const typeOptions = (typeData ?? []).map((t) => ({
     id: t.id,
     name: t.type_name_container,
+  }));
+
+  const stationOptions = (stations ?? []).map((station) => ({
+    id: station.id,
+    name: station.station_of_containers_name,
+  }));
+
+  const statusOptions = (statusesData ?? []).map((status) => ({
+    id: status.id,
+    name: status.status_name,
   }));
 
   return (
@@ -109,6 +116,7 @@ export const NavigationMenuContainers = () => {
           <AddContainerForm
             isOpen={isAddContainerFormOpen}
             onClose={handleCloseModal}
+            stationOptions={stationOptions}
             typeOptions={typeOptions}
             statusOptions={statusOptions}
           />

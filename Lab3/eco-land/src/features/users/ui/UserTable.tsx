@@ -7,22 +7,47 @@ import { UpdateRoleForm } from "./UpdateRoleForm";
 import { Pagination } from "shared/ui/pagination/Pagination";
 import { DeleteButton } from "shared/ui/buttons/deleteButton/deleteButton";
 import { usersApi } from "../api/usersApi";
+import { useRolesQuery } from "features/roles/model/useRolesQuery";
+import { SearchInput } from "shared/ui/seach/SearchInput";
+import { FilterSelect } from "shared/ui/filter/FilterOption";
 
 const USERS_PER_PAGE = 8;
 
 export const UsersTable = () => {
   const [page, setPage] = useState(1);
-  const { data: users, isLoading, isError, isFetching } = useUsersQuery(page);
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRoleId, setSelectedRoleId] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<{
     id: number;
     role: number;
   } | null>(null);
 
-  const totalPages = Math.ceil((users?.length ?? 0) / USERS_PER_PAGE);
+  const { data: roles } = useRolesQuery();
+  const selectedRoleName =
+    roles?.find((role) => role.id === selectedRoleId)?.name || "";
+
+  const { data, isLoading, isError, isFetching } = useUsersQuery(
+    page,
+    searchTerm,
+    selectedRoleName
+  );
+
+  const users = data?.results ?? [];
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setPage(page);
+  };
+
+  const handleFilterChange = (value: number) => {
+    setSelectedRoleId(value);
+    setPage(page);
+  };
+
+  const totalPages = Math.ceil((data?.count ?? 0) / USERS_PER_PAGE);
   const start = (page - 1) * USERS_PER_PAGE;
-  const currentUsers = users?.slice(start, start + USERS_PER_PAGE) ?? [];
+  const currentUsers = users ?? [];
 
   const handleOpenModal = (userId: number, currentRole: number) => {
     setSelectedUser({ id: userId, role: currentRole });
@@ -53,6 +78,23 @@ export const UsersTable = () => {
   return (
     <div className={styles.usersContainer}>
       <h1>Users</h1>
+      <div className={styles.controls}>
+        <SearchInput
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+        />
+        <FilterSelect
+          options={
+            roles?.map((role) => ({
+              id: role.id,
+              name: role.name,
+            })) || []
+          }
+          selectedValue={selectedRoleId}
+          onChange={handleFilterChange}
+          placeholder="Choose Role"
+        />
+      </div>
       <table className={styles.usersTable}>
         <thead>
           <tr>

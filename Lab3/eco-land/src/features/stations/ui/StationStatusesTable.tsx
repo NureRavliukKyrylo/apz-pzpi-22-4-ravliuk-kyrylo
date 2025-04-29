@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useStationStatusesQuery } from "../model/useStationStatusesQuery";
+import { useStationStatusesParamsQuery } from "../model/useStationStatusesQuery";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import { ModalLayout } from "shared/ui/modalLayout/ModalLayout";
 import { UpdateStationStatusNameForm } from "./UpdateStationStatusName";
@@ -13,12 +13,8 @@ const STATUSES_PER_PAGE = 8;
 
 export const StationStatusesTable = () => {
   const [page, setPage] = useState(1);
-  const {
-    data: statuses,
-    isLoading,
-    isError,
-    isFetching,
-  } = useStationStatusesQuery();
+  const { data, isLoading, isError, isFetching } =
+    useStationStatusesParamsQuery(page);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<{
@@ -27,10 +23,10 @@ export const StationStatusesTable = () => {
   } | null>(null);
   const { clearError } = useErrorStore();
 
-  const totalPages = Math.ceil((statuses?.length ?? 0) / STATUSES_PER_PAGE);
+  const statuses = data?.results ?? [];
+  const totalPages = Math.ceil((data?.count ?? 0) / STATUSES_PER_PAGE);
   const start = (page - 1) * STATUSES_PER_PAGE;
-  const currentStatuses =
-    statuses?.slice(start, start + STATUSES_PER_PAGE) ?? [];
+  const currentStatuses = statuses ?? [];
 
   const handleOpenModal = (statusId: number, statusName: string) => {
     setSelectedStatus({ id: statusId, status_station_name: statusName });

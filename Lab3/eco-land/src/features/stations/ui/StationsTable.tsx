@@ -1,23 +1,34 @@
 import { useState } from "react";
 import { useStationsQuery } from "../model/useStationsQuery";
+import { useStationStatusesQuery } from "../model/useStationStatusesQuery";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import { ModalLayout } from "shared/ui/modalLayout/ModalLayout";
 import { UpdateStationStatusForm } from "./UpdateStationStatusForm";
 import { Pagination } from "shared/ui/pagination/Pagination";
 import { DeleteButton } from "shared/ui/buttons/deleteButton/deleteButton";
+import { SearchInput } from "shared/ui/seach/SearchInput";
+import { FilterSelect } from "shared/ui/filter/FilterOption";
 import { stationApi } from "../api/stationsApi";
+import { useStationsParamsQuery } from "../model/useStationsQuery";
 import styles from "./StationsTable.module.scss";
 
 const STATIONS_PER_PAGE = 8;
 
 export const StationsTable = () => {
   const [page, setPage] = useState(1);
-  const {
-    data: stations,
-    isLoading,
-    isError,
-    isFetching,
-  } = useStationsQuery(page);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedStatusId, setSelectedStatusId] = useState(0);
+
+  const { data: statuses } = useStationStatusesQuery();
+  const selectedStatusName =
+    statuses?.find((status) => status.id === selectedStatusId)
+      ?.station_status_name || "";
+
+  const { data, isLoading, isError, isFetching } = useStationsParamsQuery(
+    page,
+    searchTerm,
+    selectedStatusName
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStation, setSelectedStation] = useState<{
@@ -25,10 +36,11 @@ export const StationsTable = () => {
     status_station: number;
   } | null>(null);
 
-  const totalPages = Math.ceil((stations?.length ?? 0) / STATIONS_PER_PAGE);
+  const stations = data?.results ?? [];
+
+  const totalPages = Math.ceil((data?.count ?? 0) / STATIONS_PER_PAGE);
   const start = (page - 1) * STATIONS_PER_PAGE;
-  const currentStations =
-    stations?.slice(start, start + STATIONS_PER_PAGE) ?? [];
+  const currentRoles = stations ?? [];
 
   const handleOpenModal = (stationId: number, currentStatus: number) => {
     setSelectedStation({ id: stationId, status_station: currentStatus });
@@ -40,13 +52,15 @@ export const StationsTable = () => {
     setSelectedStation(null);
   };
 
-  if (isLoading || isFetching) {
-    return (
-      <div className={styles.stationsContainer}>
-        <SpinnerLoading centered />
-      </div>
-    );
-  }
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setPage(page);
+  };
+
+  const handleFilterChange = (value: number) => {
+    setSelectedStatusId(value);
+    setPage(page);
+  };
 
   if (isError) {
     return (
@@ -59,57 +73,85 @@ export const StationsTable = () => {
   return (
     <div className={styles.stationsContainer}>
       <h1>Stations</h1>
-      <table className={styles.stationsTable}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-            <th>Last Reserved</th>
-            <th>Status</th>
-            <th>Actions</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentStations.map((station) => (
-            <tr key={station.id}>
-              <td>{station.station_of_containers_name}</td>
-              <td>{station.latitude_location}</td>
-              <td>{station.longitude_location}</td>
-              <td>{station.last_reserved}</td>
-              <td>
-                <span
-                  className={`${styles.statusChip} ${
-                    styles[station.statusName.toLowerCase()] || ""
-                  }`}
-                >
-                  {station.statusName}
-                </span>
-              </td>
-              <td>
-                <button
-                  className={styles.changeBtn}
-                  onClick={() =>
-                    handleOpenModal(Number(station.id), station.status_station)
-                  }
-                >
-                  Change Status
-                </button>
-              </td>
-              <td>
-                <DeleteButton
-                  id={station.id}
-                  deleteFn={stationApi.deleteStation}
-                  label="Station"
-                  data={station.station_of_containers_name}
-                  onSuccess={() => setPage(1)}
-                />
-              </td>
+
+      <div className={styles.controls}>
+        <SearchInput
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+        />
+        <FilterSelect
+          options={
+            statuses?.map((status) => ({
+              id: status.id,
+              name: status.station_status_name,
+            })) || []
+          }
+          selectedValue={selectedStatusId}
+          onChange={handleFilterChange}
+          placeholder="Choose Status"
+        />
+      </div>
+
+      {isLoading ? (
+        <div className={styles.spinnerWrapper}>
+          <SpinnerLoading centered />
+        </div>
+      ) : (
+        <table className={styles.stationsTable}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Latitude</th>
+              <th>Longitude</th>
+              <th>Last Reserved</th>
+              <th>Status</th>
+              <th>Actions</th>
+              <th>Delete</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {stations.map((station) => (
+              <tr key={station.id}>
+                <td>{station.station_of_containers_name}</td>
+                <td>{station.latitude_location}</td>
+                <td>{station.longitude_location}</td>
+                <td>{station.last_reserved}</td>
+                <td>
+                  <span
+                    className={`${styles.statusChip} ${
+                      styles[station.statusName.toLowerCase()] || ""
+                    }`}
+                  >
+                    {station.statusName}
+                  </span>
+                </td>
+                <td>
+                  <button
+                    className={styles.changeBtn}
+                    onClick={() =>
+                      handleOpenModal(
+                        Number(station.id),
+                        station.status_station
+                      )
+                    }
+                  >
+                    Change Status
+                  </button>
+                </td>
+                <td>
+                  <DeleteButton
+                    id={station.id}
+                    deleteFn={stationApi.deleteStation}
+                    label="Station"
+                    data={station.station_of_containers_name}
+                    onSuccess={() => setPage(1)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
       <ModalLayout isOpen={isModalOpen} onClose={handleCloseModal}>
         {selectedStation && (

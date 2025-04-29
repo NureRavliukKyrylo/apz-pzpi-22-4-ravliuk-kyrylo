@@ -1,8 +1,9 @@
 import { apiClient } from "shared/api/apiClient";
 import { Role } from "entities/role/roleTypes";
+import { PaginatedRolesResponse } from "../model/useRolesQuery";
 
 export const rolesApi = {
-  getRoles: async (page: number): Promise<Role[]> => {
+  getRoles: async (page?: number): Promise<Role[]> => {
     const response = await apiClient.get<Role[]>(`/roleUsers/?page=${page}`);
     return response.data;
   },
@@ -22,5 +23,13 @@ export const rolesApi = {
   },
   addRole: async (roleName: string) => {
     const response = await apiClient.post(`/roleUsers/`, { name: roleName });
+  },
+  getRolesWithParams: async (
+    params: string
+  ): Promise<PaginatedRolesResponse> => {
+    const response = await apiClient.get<PaginatedRolesResponse>(
+      `/roleUsers/?${params}`
+    );
+    return response.data;
   },
 };

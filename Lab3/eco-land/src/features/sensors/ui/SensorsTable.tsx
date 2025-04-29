@@ -6,29 +6,42 @@ import { sensorApi } from "../api/sensorsApi";
 import styles from "./SensorsTable.module.scss";
 import { Pagination } from "shared/ui/pagination/Pagination";
 import { useSortableData } from "shared/utils/useSortableData";
+import { useContainerTypesQuery } from "features/containers/model/useContainerTypesQuery";
+import { SearchInput } from "shared/ui/seach/SearchInput";
+import { FilterSelect } from "shared/ui/filter/FilterOption";
 
 const SENSORS_PER_PAGE = 8;
 
 export const SensorsTable = () => {
   const [page, setPage] = useState(1);
+  const [selectedTypeId, setSelectedTypeId] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const {
-    data: sensors,
-    isLoading,
-    isError,
-    isFetching,
-  } = useSensorsQuery(page);
+  const { data: types } = useContainerTypesQuery();
+  const selectedTypeName =
+    types?.find((type) => type.id === selectedTypeId)?.type_name_container ||
+    "";
 
-  const {
-    sortedItems: sortedSensors,
-    sortBy,
-    sortOrder,
-    requestSort,
-  } = useSortableData(sensors || []);
+  const { data, isLoading, isError, isFetching } = useSensorsQuery(
+    page,
+    searchTerm,
+    selectedTypeName
+  );
+  const sensors = data?.results ?? [];
 
-  const totalPages = Math.ceil(sortedSensors.length / 8);
+  const totalPages = Math.ceil((data?.count ?? 0) / SENSORS_PER_PAGE);
   const start = (page - 1) * SENSORS_PER_PAGE;
-  const currentSensors = sortedSensors.slice((page - 1) * 8, page * 8);
+  const currentSensors = sensors ?? [];
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setPage(page);
+  };
+
+  const handleFilterChange = (value: number) => {
+    setSelectedTypeId(value);
+    setPage(page);
+  };
 
   if (isLoading || isFetching) {
     return (
@@ -49,26 +62,36 @@ export const SensorsTable = () => {
   return (
     <div className={styles.sensorsContainer}>
       <h1>Sensors</h1>
+      <div className={styles.controls}>
+        <SearchInput
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+        />
+        <FilterSelect
+          options={
+            types?.map((type) => ({
+              id: type.id,
+              name: type.type_name_container,
+            })) || []
+          }
+          selectedValue={selectedTypeId}
+          onChange={handleFilterChange}
+          placeholder="Choose Type"
+        />
+      </div>
+
       <table className={styles.sensorsTable}>
         <thead>
           <tr>
-            <th onClick={() => requestSort("sensor_value")}>Sensor Value</th>
-            <th onClick={() => requestSort("time_of_detect")}>Detected At</th>
-            <th
-              onClick={() => requestSort("containerType.type_name_container")}
-            >
-              Container Type
-            </th>
-            <th
-              onClick={() => requestSort("station.station_of_containers_name")}
-            >
-              Station Name
-            </th>
+            <th>Sensor Value</th>
+            <th>Detected At</th>
+            <th>Container Type</th>
+            <th>Station Name</th>
             <th>Delete</th>
           </tr>
         </thead>
         <tbody>
-          {currentSensors.map((sensor) => (
+          {currentSensors?.map((sensor) => (
             <tr key={sensor.id}>
               <td>{sensor.sensor_value}</td>
               <td>{new Date(sensor.time_of_detect).toLocaleString()}</td>

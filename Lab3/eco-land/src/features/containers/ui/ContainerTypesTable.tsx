@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useContainerTypesQuery } from "../model/useContainerTypesQuery";
+import { useContainerTypesParamsQuery } from "../model/useContainerTypesQuery";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import { DeleteButton } from "shared/ui/buttons/deleteButton/deleteButton";
 import { containerApi } from "../api/containersApi";
@@ -12,7 +12,8 @@ const CONTAINERS_PER_PAGE = 8;
 
 export const ContainerTypesTable = () => {
   const [page, setPage] = useState(1);
-  const { data: types, isLoading, isError, refetch } = useContainerTypesQuery();
+  const { data, isLoading, isError, refetch } =
+    useContainerTypesParamsQuery(page);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedType, setSelectedType] = useState<{
     id: number;
@@ -20,9 +21,10 @@ export const ContainerTypesTable = () => {
     volume_container: number;
   } | null>(null);
 
-  const totalPages = Math.ceil((types?.length ?? 0) / CONTAINERS_PER_PAGE);
-  const start = (page - 1) * CONTAINERS_PER_PAGE;
-  const currentTypes = types?.slice(start, start + CONTAINERS_PER_PAGE) ?? [];
+  const containerTypes = data?.results ?? [];
+
+  const totalPages = Math.ceil((data?.count ?? 0) / CONTAINERS_PER_PAGE);
+  const currentTypes = containerTypes;
 
   if (isLoading) {
     return <SpinnerLoading centered />;

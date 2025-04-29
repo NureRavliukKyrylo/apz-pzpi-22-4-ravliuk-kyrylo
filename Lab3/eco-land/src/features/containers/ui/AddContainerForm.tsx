@@ -9,6 +9,7 @@ import styles from "./AddContainerForm.module.scss";
 type AddContainerFormProps = {
   isOpen: boolean;
   onClose: () => void;
+  stationOptions: { id: number; name: string }[];
   typeOptions: { id: number; name: string }[];
   statusOptions: { id: number; name: string }[];
 };
@@ -16,31 +17,42 @@ type AddContainerFormProps = {
 export const AddContainerForm = ({
   isOpen,
   onClose,
+  stationOptions,
   typeOptions,
   statusOptions,
 }: AddContainerFormProps) => {
-  const [containerName, setContainerName] = useState("");
-  const [containerType, setContainerType] = useState<number | null>(null);
-  const [containerStatus, setContainerStatus] = useState<number | null>(null);
-  const [volume, setVolume] = useState<number | string>("");
+  const [selectedStationId, setSelectedStationId] = useState<number | null>(
+    null
+  );
+  const [selectedTypeId, setSelectedTypeId] = useState<number | null>(null);
+  const [selectedStatusId, setSelectedStatusId] = useState<number | null>(null);
   const { error, setError, clearError } = useErrorStore();
   const { mutate, isPending } = useAddContainer();
 
   useEffect(() => {
-    if (typeOptions.length > 0 && containerType === null) {
-      setContainerType(typeOptions[0].id);
+    if (stationOptions.length > 0 && selectedStationId === null) {
+      setSelectedStationId(stationOptions[0].id);
     }
-    if (statusOptions.length > 0 && containerStatus === null) {
-      setContainerStatus(statusOptions[0].id);
+    if (typeOptions.length > 0 && selectedTypeId === null) {
+      setSelectedTypeId(typeOptions[0].id);
     }
-  }, [typeOptions, statusOptions, containerType, containerStatus]);
+    if (statusOptions.length > 0 && selectedStatusId === null) {
+      setSelectedStatusId(statusOptions[0].id);
+    }
+  }, [
+    stationOptions,
+    typeOptions,
+    statusOptions,
+    selectedStationId,
+    selectedTypeId,
+    selectedStatusId,
+  ]);
 
   const handleAddContainer = async () => {
     if (
-      containerName.trim() === "" ||
-      volume === "" ||
-      containerType === null ||
-      containerStatus === null
+      selectedStationId === null ||
+      selectedTypeId === null ||
+      selectedStatusId === null
     ) {
       setError("All fields must be filled.");
       return;
@@ -48,17 +60,15 @@ export const AddContainerForm = ({
 
     mutate(
       {
-        container_name: containerName,
-        type_of_container_id: containerType,
-        status_container_id: containerStatus,
-        volume_container: Number(volume),
+        station_id: selectedStationId,
+        type_of_container_id: selectedTypeId,
+        status_container_id: selectedStatusId,
       },
       {
         onSuccess: () => {
-          setContainerName("");
-          setContainerType(null);
-          setContainerStatus(null);
-          setVolume("");
+          setSelectedStationId(null);
+          setSelectedTypeId(null);
+          setSelectedStatusId(null);
           clearError();
           onClose();
         },
@@ -79,35 +89,33 @@ export const AddContainerForm = ({
     <ModalLayout isOpen={isOpen} onClose={onClose}>
       <div className={styles.container}>
         <h2>Add New Container</h2>
-        <input
-          type="text"
-          placeholder="Enter container name"
-          value={containerName}
-          onChange={(e) => setContainerName(e.target.value)}
-          className={styles.input}
-        />
-        <input
-          type="number"
-          placeholder="Enter volume"
-          value={volume}
-          onChange={(e) => setVolume(e.target.value)}
-          className={styles.input}
-        />
-        {containerType !== null && (
+
+        {selectedStationId !== null && (
+          <Options
+            options={stationOptions}
+            selectedValue={selectedStationId}
+            onChange={setSelectedStationId}
+          />
+        )}
+
+        {selectedTypeId !== null && (
           <Options
             options={typeOptions}
-            selectedValue={containerType}
-            onChange={setContainerType}
+            selectedValue={selectedTypeId}
+            onChange={setSelectedTypeId}
           />
         )}
-        {containerStatus !== null && (
+
+        {selectedStatusId !== null && (
           <Options
             options={statusOptions}
-            selectedValue={containerStatus}
-            onChange={setContainerStatus}
+            selectedValue={selectedStatusId}
+            onChange={setSelectedStatusId}
           />
         )}
+
         {error && <p className={styles.error}>{error}</p>}
+
         <button
           onClick={handleAddContainer}
           disabled={isPending}

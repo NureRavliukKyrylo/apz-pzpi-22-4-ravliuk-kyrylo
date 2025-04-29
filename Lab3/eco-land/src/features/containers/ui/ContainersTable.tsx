@@ -1,23 +1,42 @@
 import { useState } from "react";
-import { useContainersQuery } from "../model/useContainersQuery";
+import { useContainersParamsQuery } from "../model/useContainersQuery";
+import { useContainerStatusesQuery } from "../model/useContainerStatusesQuery";
+import { useContainerTypesQuery } from "../model/useContainerTypesQuery";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import { Pagination } from "shared/ui/pagination/Pagination";
 import { DeleteButton } from "shared/ui/buttons/deleteButton/deleteButton";
 import { containerApi } from "../api/containersApi";
 import { ModalLayout } from "shared/ui/modalLayout/ModalLayout";
 import { UpdateContainerTypeForm } from "./UpdateContainerTypeForm";
+import { FilterSelect } from "shared/ui/filter/FilterOption";
+import { SearchInput } from "shared/ui/seach/SearchInput";
 import styles from "./ContainersTable.module.scss";
 
 const CONTAINERS_PER_PAGE = 8;
 
 export const ContainersTable = () => {
   const [page, setPage] = useState(1);
-  const {
-    data: containers,
-    isLoading,
-    isError,
-    isFetching,
-  } = useContainersQuery(page);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedStatusId, setSelectedStatusId] = useState(0);
+  const [selectedTypeId, setSelectedTypeId] = useState(0);
+
+  const { data: statuses = [] } = useContainerStatusesQuery();
+  const { data: types = [] } = useContainerTypesQuery();
+
+  const selectedStatusName =
+    statuses?.find((status) => status.id === selectedStatusId)?.status_name ||
+    "";
+
+  const selectedTypeName =
+    types?.find((type) => type.id === selectedTypeId)?.type_name_container ||
+    "";
+
+  const { data, isLoading, isError, isFetching } = useContainersParamsQuery(
+    page,
+    searchTerm,
+    selectedStatusName,
+    selectedTypeName
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedContainer, setSelectedContainer] = useState<{
@@ -38,10 +57,11 @@ export const ContainersTable = () => {
     setIsModalOpen(false);
   };
 
-  const totalPages = Math.ceil((containers?.length ?? 0) / CONTAINERS_PER_PAGE);
+  const containers = data?.results ?? [];
+
+  const totalPages = Math.ceil((data?.count ?? 0) / CONTAINERS_PER_PAGE);
   const start = (page - 1) * CONTAINERS_PER_PAGE;
-  const currentContainers =
-    containers?.slice(start, start + CONTAINERS_PER_PAGE) ?? [];
+  const currentContainers = containers ?? [];
 
   if (isLoading || isFetching) {
     return (
@@ -62,6 +82,47 @@ export const ContainersTable = () => {
   return (
     <div className={styles.containersContainer}>
       <h1>Containers</h1>
+
+      <div className={styles.controls}>
+        <SearchInput
+          searchTerm={searchTerm}
+          onSearchChange={(val) => {
+            setSearchTerm(val);
+            setPage(page);
+          }}
+        />
+
+        <FilterSelect
+          options={
+            statuses?.map((status) => ({
+              id: status.id,
+              name: status.status_name,
+            })) || []
+          }
+          selectedValue={selectedStatusId}
+          onChange={(val) => {
+            setSelectedStatusId(val);
+            setPage(page);
+          }}
+          placeholder="Choose Status"
+        />
+
+        <FilterSelect
+          options={
+            types?.map((type) => ({
+              id: type.id,
+              name: type.type_name_container,
+            })) || []
+          }
+          selectedValue={selectedTypeId}
+          onChange={(val) => {
+            setSelectedTypeId(val);
+            setPage(page);
+          }}
+          placeholder="Choose Type"
+        />
+      </div>
+
       <table className={styles.containersTable}>
         <thead>
           <tr>

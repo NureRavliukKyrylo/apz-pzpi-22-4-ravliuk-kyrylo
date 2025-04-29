@@ -19,6 +19,12 @@
   }
 }
 
+.controls {
+  display: flex;
+  margin-bottom: 30px;
+  justify-content: center;
+  gap: 20px;
+}
 .sensorsTable {
   width: 100%;
   border-collapse: collapse;

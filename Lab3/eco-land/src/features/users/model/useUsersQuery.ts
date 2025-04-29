@@ -6,21 +6,44 @@ import { rolesApi } from "features/roles/api/rolesApi";
 
 export type EnrichedUser = User & { roleName: string };
 
-export const useUsersQuery = (page: number) => {
-  const previousData = useRef<EnrichedUser[] | null>(null);
+export interface EnrichedUsersResponse {
+  results: EnrichedUser[];
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
 
-  const query = useQuery<EnrichedUser[]>({
-    queryKey: ["users", page],
+export const useUsersQuery = (page: number, searchTerm = "", roleName = "") => {
+  const previousData = useRef<EnrichedUsersResponse | null>(null);
+
+  const query = useQuery<EnrichedUsersResponse>({
+    queryKey: ["users", page, searchTerm, roleName],
     queryFn: async () => {
-      const rawUsers = await usersApi.getCustomers(page);
-      const enriched = await Promise.all(
+      const params = new URLSearchParams();
+
+      if (searchTerm) params.append("search", searchTerm);
+      if (roleName) params.append("role__name", roleName);
+      params.append("page", page.toString());
+
+      const response = await usersApi.getUsersWithParams(params.toString());
+      const rawUsers = response.results;
+
+      const enrichedUsers = await Promise.all(
         rawUsers.map(async (user) => {
           const roleName = await rolesApi.fetchRole(user.role);
           return { ...user, roleName };
         })
       );
-      previousData.current = enriched;
-      return enriched;
+
+      const enrichedResponse: EnrichedUsersResponse = {
+        results: enrichedUsers,
+        count: response.count,
+        next: response.next,
+        previous: response.previous,
+      };
+
+      previousData.current = enrichedResponse;
+      return enrichedResponse;
     },
     staleTime: 60_000,
   });

@@ -4,6 +4,9 @@ import {
   StatusContainer,
   TypeContainer,
 } from "entities/container/containerTypes";
+import { PaginatedContainersResponse } from "../model/useContainersQuery";
+import { PaginatedContainerStatusResponse } from "../model/useContainerStatusesQuery";
+import { PaginatedContainerTypeResponse } from "../model/useContainerTypesQuery";
 
 export const containerApi = {
   getAllContainers: async (): Promise<Container[]> => {
@@ -12,10 +15,9 @@ export const containerApi = {
   },
 
   addContainer: async (data: {
-    container_name: string;
+    station_id: number;
     type_of_container_id: number;
     status_container_id: number;
-    volume_container: number;
   }): Promise<void> => {
     await apiClient.post("/containers/", data);
   },
@@ -102,5 +104,25 @@ export const containerApi = {
       type_name_container: typeName,
       volume_container: typeVolume,
     });
+  },
+
+  getContainersWithParams: async (
+    params: string
+  ): Promise<PaginatedContainersResponse> => {
+    const response = await apiClient.get(`/containers/?${params}`);
+    return response.data;
+  },
+
+  getContainerStatusesWithParams: async (
+    params: string
+  ): Promise<PaginatedContainerStatusResponse> => {
+    const response = await apiClient.get(`/statusOfContainers/?${params}`);
+    return response.data;
+  },
+  getContainerTypesWithParams: async (
+    params: string
+  ): Promise<PaginatedContainerTypeResponse> => {
+    const response = await apiClient.get(`/typeOfContainers/?${params}`);
+    return response.data;
   },
 };

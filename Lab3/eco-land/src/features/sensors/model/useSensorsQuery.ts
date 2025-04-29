@@ -12,14 +12,40 @@ export type EnrichedSensor = IoTSensor & {
   station: Station | null;
 };
 
-export const useSensorsQuery = (page: number) => {
-  const previousData = useRef<EnrichedSensor[] | null>(null);
+export type PaginatedSensorsResponse = {
+  count: number;
+  results: EnrichedSensor[];
+};
 
-  const query = useQuery<EnrichedSensor[]>({
-    queryKey: ["sensors", page],
+export const useSensorsQuery = (
+  page: number,
+  searchTerm = "",
+  typeName = ""
+) => {
+  const previousData = useRef<PaginatedSensorsResponse | null>(null);
+
+  const query = useQuery<PaginatedSensorsResponse>({
+    queryKey: ["sensors", page, searchTerm, typeName],
     queryFn: async () => {
-      const sensors = await sensorApi.getAllSensors();
+      const params = new URLSearchParams();
 
+      if (page !== undefined) {
+        params.append("page", page.toString());
+      }
+
+      if (searchTerm) {
+        params.append("search", searchTerm);
+      }
+
+      if (typeName) {
+        params.append(
+          "container_id_filling__type_of_container_id__type_name_container",
+          typeName
+        );
+      }
+
+      const response = await sensorApi.getSensorsParams(params.toString());
+      const sensors = response.results;
       const enrichedSensors = await Promise.all(
         sensors.map(async (sensor) => {
           if (!sensor.container_id_filling) {
@@ -76,8 +102,13 @@ export const useSensorsQuery = (page: number) => {
         })
       );
 
-      previousData.current = enrichedSensors;
-      return enrichedSensors;
+      const enrichedResponse: PaginatedSensorsResponse = {
+        results: enrichedSensors,
+        count: response.count,
+      };
+
+      previousData.current = enrichedResponse;
+      return enrichedResponse;
     },
     staleTime: 60_000,
   });

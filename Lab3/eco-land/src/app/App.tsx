@@ -15,6 +15,8 @@ import { NavigationMenuContainers } from "widgets/navigationManage/containers/Na
 import ContainersPage from "pages/containers/ContainersPage";
 import { SensorsTable } from "features/sensors/ui/SensorsTable";
 import SensorsPage from "pages/sensors/SensorsPage";
+import { CollectionSchedulesTable } from "features/schedules/ui/CollectionSchedulesTable";
+import SchedulesPage from "pages/schedules/SchedulesPage";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const accessToken = localStorage.getItem("access_token");
@@ -38,6 +40,7 @@ const App = () => {
         <Route path="/stations" element={<StationsPage />} />
         <Route path="/containers" element={<ContainersPage />} />
         <Route path="/sensors" element={<SensorsPage />} />
+        <Route path="/schedules" element={<SchedulesPage />} />
       </Routes>
     </Router>
   );

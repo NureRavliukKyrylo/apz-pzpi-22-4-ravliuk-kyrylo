@@ -18,6 +18,7 @@ export const StationsTable = () => {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatusId, setSelectedStatusId] = useState(0);
+  const [ordering, setOrdering] = useState("");
 
   const { data: statuses } = useStationStatusesQuery();
   const selectedStatusName =
@@ -27,7 +28,8 @@ export const StationsTable = () => {
   const { data, isLoading, isError, isFetching } = useStationsParamsQuery(
     page,
     searchTerm,
-    selectedStatusName
+    selectedStatusName,
+    ordering
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,8 +41,6 @@ export const StationsTable = () => {
   const stations = data?.results ?? [];
 
   const totalPages = Math.ceil((data?.count ?? 0) / STATIONS_PER_PAGE);
-  const start = (page - 1) * STATIONS_PER_PAGE;
-  const currentRoles = stations ?? [];
 
   const handleOpenModal = (stationId: number, currentStatus: number) => {
     setSelectedStation({ id: stationId, status_station: currentStatus });
@@ -103,7 +103,21 @@ export const StationsTable = () => {
               <th>Name</th>
               <th>Latitude</th>
               <th>Longitude</th>
-              <th>Last Reserved</th>
+              <th
+                className={styles.sortableHeader}
+                onClick={() => {
+                  setPage(page);
+                  setOrdering((prev) =>
+                    prev === "last_reserved"
+                      ? "-last_reserved"
+                      : "last_reserved"
+                  );
+                }}
+              >
+                Last Reserved
+                {ordering === "last_reserved" && " ^ "}
+                {ordering === "-last_reserved" && " v"}
+              </th>
               <th>Status</th>
               <th>Actions</th>
               <th>Delete</th>

@@ -14,6 +14,7 @@ export const useAddStation = () => {
     }) => stationApi.addStation(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stations"] });
+      queryClient.invalidateQueries({ queryKey: ["stationsAll"] });
     },
     onError: (error) => {
       console.error("Add station error:", error);

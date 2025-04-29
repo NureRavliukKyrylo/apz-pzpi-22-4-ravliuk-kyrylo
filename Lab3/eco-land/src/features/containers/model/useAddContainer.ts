@@ -13,6 +13,7 @@ export const useAddContainer = () => {
     }) => containerApi.addContainer(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["containers"] });
+      queryClient.invalidateQueries({ queryKey: ["containersAll"] });
     },
     onError: (error) => {
       console.error("Add station error:", error);

@@ -10,6 +10,7 @@ export const useAddContainerStatus = () => {
       containerApi.addContainerStatus(status_name),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["containerStatuses"] });
+      queryClient.invalidateQueries({ queryKey: ["containerStatusesAll"] });
     },
     onError: (error) => {
       console.error("Add status error:", error);

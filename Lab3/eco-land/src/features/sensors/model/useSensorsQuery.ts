@@ -20,12 +20,13 @@ export type PaginatedSensorsResponse = {
 export const useSensorsQuery = (
   page: number,
   searchTerm = "",
-  typeName = ""
+  typeName = "",
+  ordering = ""
 ) => {
   const previousData = useRef<PaginatedSensorsResponse | null>(null);
 
   const query = useQuery<PaginatedSensorsResponse>({
-    queryKey: ["sensors", page, searchTerm, typeName],
+    queryKey: ["sensors", page, searchTerm, typeName, ordering],
     queryFn: async () => {
       const params = new URLSearchParams();
 
@@ -42,6 +43,10 @@ export const useSensorsQuery = (
           "container_id_filling__type_of_container_id__type_name_container",
           typeName
         );
+      }
+
+      if (ordering) {
+        params.append("ordering", ordering);
       }
 
       const response = await sensorApi.getSensorsParams(params.toString());

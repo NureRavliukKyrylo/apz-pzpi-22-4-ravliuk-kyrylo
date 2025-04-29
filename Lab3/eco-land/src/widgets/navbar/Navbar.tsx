@@ -13,6 +13,8 @@ export const Navbar = () => {
         <NavigationLink to="/map" label="Map" />
         <NavigationLink to="/stations" label="Stations" />
         <NavigationLink to="/containers" label="Containers" />
+        <NavigationLink to="/sensors" label="Sensors" />
+        <NavigationLink to="/schedules" label="Schedules" />
         <NavigationLink to="/reports" label="Reports" />
       </div>
     </nav>

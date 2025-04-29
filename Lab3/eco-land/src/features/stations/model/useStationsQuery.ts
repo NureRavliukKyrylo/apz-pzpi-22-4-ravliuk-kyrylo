@@ -45,12 +45,13 @@ export const useStationsQuery = () => {
 export const useStationsParamsQuery = (
   page?: number,
   searchTerm = "",
-  statusName = ""
+  statusName = "",
+  ordering = ""
 ) => {
   const previousData = useRef<PaginatedStationsResponse | null>(null);
 
   const query = useQuery<PaginatedStationsResponse>({
-    queryKey: ["stations", page, searchTerm, statusName],
+    queryKey: ["stations", page, searchTerm, statusName, ordering],
     queryFn: async () => {
       const params = new URLSearchParams();
 
@@ -64,6 +65,10 @@ export const useStationsParamsQuery = (
 
       if (statusName) {
         params.append("status_station__station_status_name", statusName);
+      }
+
+      if (ordering) {
+        params.append("ordering", ordering);
       }
 
       const response = await stationApi.getStationsWithParams(

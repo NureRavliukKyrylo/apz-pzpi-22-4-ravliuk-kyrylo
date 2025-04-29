@@ -10,6 +10,7 @@ export const useAddStationStatus = () => {
       stationApi.addStationStatus(station_status_name),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stationStatuses"] });
+      queryClient.invalidateQueries({ queryKey: ["stationStatusesAll"] });
     },
     onError: (error) => {
       console.error("Add status error:", error);

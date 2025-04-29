@@ -18,6 +18,7 @@ export const useUpdateContainerTypeData = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["containerTypes"] });
+      queryClient.invalidateQueries({ queryKey: ["containerTypesAll"] });
     },
 
     onError: (error) => {

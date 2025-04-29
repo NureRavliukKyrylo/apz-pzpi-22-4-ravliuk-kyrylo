@@ -1,11 +1,12 @@
 import { CollectionSchedule } from "entities/schedule/scheduleTypes";
 import { apiClient } from "shared/api/apiClient";
+import { PaginatedCollectionScheduleResponse } from "../model/useCollectionSchedulesQuery";
 
 export const collectionScheduleApi = {
-  getAllSchedules: async (): Promise<CollectionSchedule[]> => {
-    const response = await apiClient.get<CollectionSchedule[]>(
-      "/collectionSchedules/"
-    );
+  getAllSchedules: async (
+    params: string
+  ): Promise<PaginatedCollectionScheduleResponse> => {
+    const response = await apiClient.get(`/collectionSchedules/?${params}`);
     return response.data;
   },
 

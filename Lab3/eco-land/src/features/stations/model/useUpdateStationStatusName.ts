@@ -16,6 +16,7 @@ export const useUpdateStationStatusName = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stationStatuses"] });
+      queryClient.invalidateQueries({ queryKey: ["stationStatusesAll"] });
     },
 
     onError: (error) => {

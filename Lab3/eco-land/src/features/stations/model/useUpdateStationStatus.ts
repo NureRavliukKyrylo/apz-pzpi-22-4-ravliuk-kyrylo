@@ -15,6 +15,7 @@ export const useUpdateStationStatus = () => {
     }) => stationApi.updateStationStatus(stationId, status_station),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stations"] });
+      queryClient.invalidateQueries({ queryKey: ["stationsAll"] });
     },
     onError: (error) => {
       console.error("Update status error:", error);

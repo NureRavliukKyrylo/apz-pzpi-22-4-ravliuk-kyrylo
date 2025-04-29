@@ -16,6 +16,7 @@ export const useUpdateContainerStatusName = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["containerStatuses"] });
+      queryClient.invalidateQueries({ queryKey: ["containerStatusesAll"] });
     },
 
     onError: (error) => {

@@ -3,8 +3,8 @@ import { Role } from "entities/role/roleTypes";
 import { PaginatedRolesResponse } from "../model/useRolesQuery";
 
 export const rolesApi = {
-  getRoles: async (page?: number): Promise<Role[]> => {
-    const response = await apiClient.get<Role[]>(`/roleUsers/?page=${page}`);
+  getRoles: async (): Promise<Role[]> => {
+    const response = await apiClient.get<Role[]>(`/roleUsers/`);
     return response.data;
   },
   deleteRoles: async (roleId: number): Promise<void> => {

@@ -15,6 +15,7 @@ export const useUpdateContainerType = () => {
     }) => containerApi.updateContainerType(containerId, type_of_container_id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["containers"] });
+      queryClient.invalidateQueries({ queryKey: ["containersAll"] });
     },
     onError: (error) => {
       console.error("Update container type error:", error);

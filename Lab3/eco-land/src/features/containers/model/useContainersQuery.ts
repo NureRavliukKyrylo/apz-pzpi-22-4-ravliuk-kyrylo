@@ -86,12 +86,13 @@ export const useContainersParamsQuery = (
   page?: number,
   searchTerm = "",
   statusName = "",
-  typeName = ""
+  typeName = "",
+  ordering = ""
 ) => {
   const previousData = useRef<PaginatedContainersResponse | null>(null);
 
   const query = useQuery<PaginatedContainersResponse>({
-    queryKey: ["containers", page, searchTerm, statusName, typeName],
+    queryKey: ["containers", page, searchTerm, statusName, typeName, ordering],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (page !== undefined) params.append("page", page.toString());
@@ -100,6 +101,9 @@ export const useContainersParamsQuery = (
         params.append("status_container_id__status_name", statusName);
       if (typeName)
         params.append("type_of_container_id__type_name_container", typeName);
+      if (ordering) {
+        params.append("ordering", ordering);
+      }
 
       const rawContainers = await containerApi.getContainersWithParams(
         params.toString()

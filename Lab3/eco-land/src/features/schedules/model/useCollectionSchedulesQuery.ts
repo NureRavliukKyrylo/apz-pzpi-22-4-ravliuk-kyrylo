@@ -9,13 +9,40 @@ export type EnrichedCollectionSchedule = CollectionSchedule & {
   station: Station | null;
 };
 
-export const useCollectionSchedulesQuery = (page: number) => {
-  const previousData = useRef<EnrichedCollectionSchedule[] | null>(null);
+export type PaginatedCollectionScheduleResponse = {
+  count: number;
+  results: EnrichedCollectionSchedule[];
+};
 
-  const query = useQuery<EnrichedCollectionSchedule[]>({
-    queryKey: ["collectionSchedules", page],
+export const useCollectionSchedulesQuery = (
+  page: number,
+  searchTerm = "",
+  ordering = ""
+) => {
+  const previousData = useRef<PaginatedCollectionScheduleResponse | null>(null);
+
+  const query = useQuery<PaginatedCollectionScheduleResponse>({
+    queryKey: ["collectionSchedules", page, searchTerm, ordering],
     queryFn: async () => {
-      const schedules = await collectionScheduleApi.getAllSchedules();
+      const params = new URLSearchParams();
+
+      if (page !== undefined) {
+        params.append("page", page.toString());
+      }
+
+      if (searchTerm) {
+        params.append("search", searchTerm);
+      }
+
+      if (ordering) {
+        params.append("ordering", ordering);
+      }
+
+      const response = await collectionScheduleApi.getAllSchedules(
+        params.toString()
+      );
+
+      const schedules = response.results;
 
       const enrichedSchedules = await Promise.all(
         schedules.map(async (schedule) => {
@@ -40,8 +67,13 @@ export const useCollectionSchedulesQuery = (page: number) => {
         })
       );
 
-      previousData.current = enrichedSchedules;
-      return enrichedSchedules;
+      const enrichedResponse: PaginatedCollectionScheduleResponse = {
+        results: enrichedSchedules,
+        count: response.count,
+      };
+
+      previousData.current = enrichedResponse;
+      return enrichedResponse;
     },
     staleTime: 60_000,
   });

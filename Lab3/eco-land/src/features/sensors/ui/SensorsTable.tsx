@@ -16,6 +16,7 @@ export const SensorsTable = () => {
   const [page, setPage] = useState(1);
   const [selectedTypeId, setSelectedTypeId] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [ordering, setOrdering] = useState("");
 
   const { data: types } = useContainerTypesQuery();
   const selectedTypeName =
@@ -25,7 +26,8 @@ export const SensorsTable = () => {
   const { data, isLoading, isError, isFetching } = useSensorsQuery(
     page,
     searchTerm,
-    selectedTypeName
+    selectedTypeName,
+    ordering
   );
   const sensors = data?.results ?? [];
 
@@ -42,14 +44,6 @@ export const SensorsTable = () => {
     setSelectedTypeId(value);
     setPage(page);
   };
-
-  if (isLoading || isFetching) {
-    return (
-      <div className={styles.sensorsContainer}>
-        <SpinnerLoading centered />
-      </div>
-    );
-  }
 
   if (isError) {
     return (
@@ -80,37 +74,56 @@ export const SensorsTable = () => {
         />
       </div>
 
-      <table className={styles.sensorsTable}>
-        <thead>
-          <tr>
-            <th>Sensor Value</th>
-            <th>Detected At</th>
-            <th>Container Type</th>
-            <th>Station Name</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentSensors?.map((sensor) => (
-            <tr key={sensor.id}>
-              <td>{sensor.sensor_value}</td>
-              <td>{new Date(sensor.time_of_detect).toLocaleString()}</td>
-              <td>{sensor.containerType?.type_name_container}</td>
-              <td>{sensor.station?.station_of_containers_name}</td>
-              <td>
-                <DeleteButton
-                  id={sensor.id}
-                  deleteFn={sensorApi.deleteSensor}
-                  label="Sensor"
-                  data={String(sensor.id)}
-                  onSuccess={() => setPage(1)}
-                />
-              </td>
+      {isLoading ? (
+        <div className={styles.spinnerWrapper}>
+          <SpinnerLoading centered />
+        </div>
+      ) : (
+        <table className={styles.sensorsTable}>
+          <thead>
+            <tr>
+              <th>Sensor Value</th>
+              <th
+                className={styles.sortableHeader}
+                onClick={() => {
+                  setPage(page);
+                  setOrdering((prev) =>
+                    prev === "time_of_detect"
+                      ? "-time_of_detect"
+                      : "time_of_detect"
+                  );
+                }}
+              >
+                Detected At
+                {ordering === "time_of_detect" && " ^ "}
+                {ordering === "-time_of_detect" && " v"}
+              </th>
+              <th>Container Type</th>
+              <th>Station Name</th>
+              <th>Delete</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
+          </thead>
+          <tbody>
+            {currentSensors?.map((sensor) => (
+              <tr key={sensor.id}>
+                <td>{sensor.sensor_value}</td>
+                <td>{new Date(sensor.time_of_detect).toLocaleString()}</td>
+                <td>{sensor.containerType?.type_name_container}</td>
+                <td>{sensor.station?.station_of_containers_name}</td>
+                <td>
+                  <DeleteButton
+                    id={sensor.id}
+                    deleteFn={sensorApi.deleteSensor}
+                    label="Sensor"
+                    data={String(sensor.id)}
+                    onSuccess={() => setPage(1)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
       <div className={styles.paginationContainer}>
         <Pagination
           currentPage={page}

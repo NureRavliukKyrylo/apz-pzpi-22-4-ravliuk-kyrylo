@@ -32,7 +32,7 @@ export const useRolesQuery = () => {
   const previousData = useRef<Role[] | null>(null);
 
   const query = useQuery<Role[]>({
-    queryKey: ["new"],
+    queryKey: ["rolesAll"],
     queryFn: async () => {
       const roles = await rolesApi.getRoles();
       previousData.current = roles;

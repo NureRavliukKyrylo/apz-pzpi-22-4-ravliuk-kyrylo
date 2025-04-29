@@ -12,6 +12,7 @@ export const useAddContainerType = () => {
     }) => containerApi.addContainerType(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["containerTypes"] });
+      queryClient.invalidateQueries({ queryKey: ["containerTypesAll"] });
     },
     onError: (error) => {
       console.error("Add status error:", error);

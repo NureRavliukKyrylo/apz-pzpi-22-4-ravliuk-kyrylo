@@ -59,14 +59,6 @@ export const UsersTable = () => {
     setSelectedUser(null);
   };
 
-  if (isLoading || isFetching) {
-    return (
-      <div className={styles.usersContainer}>
-        <SpinnerLoading centered />
-      </div>
-    );
-  }
-
   if (isError) {
     return (
       <div className={styles.usersContainer}>
@@ -95,52 +87,57 @@ export const UsersTable = () => {
           placeholder="Choose Role"
         />
       </div>
-      <table className={styles.usersTable}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Actions</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentUsers.map((user) => (
-            <tr key={user.id}>
-              <td>{user.username}</td>
-              <td>{user.email}</td>
-              <td>
-                <span
-                  className={`${styles.roleChip} ${
-                    styles[user.roleName.toLowerCase()]
-                  }`}
-                >
-                  {user.roleName}
-                </span>
-              </td>
-              <td>
-                <button
-                  className={styles.changeBtn}
-                  onClick={() => handleOpenModal(Number(user.id), user.role)}
-                >
-                  Change Role
-                </button>
-              </td>
-              <td>
-                <DeleteButton
-                  id={user.id}
-                  deleteFn={usersApi.deleteUser}
-                  label="User"
-                  data={user.username}
-                  onSuccess={() => setPage(1)}
-                />
-              </td>
+      {isLoading ? (
+        <div className={styles.spinnerWrapper}>
+          <SpinnerLoading centered />
+        </div>
+      ) : (
+        <table className={styles.usersTable}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Actions</th>
+              <th>Delete</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-
+          </thead>
+          <tbody>
+            {currentUsers.map((user) => (
+              <tr key={user.id}>
+                <td>{user.username}</td>
+                <td>{user.email}</td>
+                <td>
+                  <span
+                    className={`${styles.roleChip} ${
+                      styles[user.roleName.toLowerCase()]
+                    }`}
+                  >
+                    {user.roleName}
+                  </span>
+                </td>
+                <td>
+                  <button
+                    className={styles.changeBtn}
+                    onClick={() => handleOpenModal(Number(user.id), user.role)}
+                  >
+                    Change Role
+                  </button>
+                </td>
+                <td>
+                  <DeleteButton
+                    id={user.id}
+                    deleteFn={usersApi.deleteUser}
+                    label="User"
+                    data={user.username}
+                    onSuccess={() => setPage(1)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
       <ModalLayout isOpen={isModalOpen} onClose={handleCloseModal}>
         {selectedUser && (
           <UpdateRoleForm

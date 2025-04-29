@@ -28,6 +28,7 @@ export const AddRoleForm = ({ isOpen, onClose }: AddRoleFormProps) => {
       await rolesApi.addRole(roleName);
 
       queryClient.invalidateQueries({ queryKey: ["roles"] });
+      queryClient.invalidateQueries({ queryKey: ["rolesAll"] });
 
       setRoleName("");
       setError("");

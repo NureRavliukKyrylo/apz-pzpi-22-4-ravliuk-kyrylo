@@ -9,6 +9,7 @@ export const useDeleteStationStatus = () => {
     mutationFn: (statusId: number) => stationApi.deleteStationStatus(statusId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["stationStatuses"] });
+      queryClient.invalidateQueries({ queryKey: ["stationStatusesAll"] });
     },
     onError: (error) => {
       console.error("Delete station status error:", error);

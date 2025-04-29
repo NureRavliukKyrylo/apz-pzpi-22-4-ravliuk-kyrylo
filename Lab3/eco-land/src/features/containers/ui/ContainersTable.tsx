@@ -19,6 +19,7 @@ export const ContainersTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatusId, setSelectedStatusId] = useState(0);
   const [selectedTypeId, setSelectedTypeId] = useState(0);
+  const [ordering, setOrdering] = useState("");
 
   const { data: statuses = [] } = useContainerStatusesQuery();
   const { data: types = [] } = useContainerTypesQuery();
@@ -35,7 +36,8 @@ export const ContainersTable = () => {
     page,
     searchTerm,
     selectedStatusName,
-    selectedTypeName
+    selectedTypeName,
+    ordering
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -62,14 +64,6 @@ export const ContainersTable = () => {
   const totalPages = Math.ceil((data?.count ?? 0) / CONTAINERS_PER_PAGE);
   const start = (page - 1) * CONTAINERS_PER_PAGE;
   const currentContainers = containers ?? [];
-
-  if (isLoading || isFetching) {
-    return (
-      <div className={styles.containersContainer}>
-        <SpinnerLoading centered />
-      </div>
-    );
-  }
 
   if (isError) {
     return (
@@ -123,62 +117,80 @@ export const ContainersTable = () => {
         />
       </div>
 
-      <table className={styles.containersTable}>
-        <thead>
-          <tr>
-            <th>Station</th>
-            <th>Fill Level</th>
-            <th>Volume</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Last Updated</th>
-            <th>Actions</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentContainers.map((container) => (
-            <tr key={container.id}>
-              <td>{container.stationName}</td>
-              <td>{container.fill_level}%</td>
-              <td>{container.volume} л</td>
-              <td>{container.typeName}</td>
-              <td>
-                <span
-                  className={`${styles.statusChip} ${
-                    styles[container.statusName.toLowerCase()] || ""
-                  }`}
-                >
-                  {container.statusName}
-                </span>
-              </td>
-              <td>{new Date(container.last_updated).toLocaleString()}</td>
-              <td>
-                <button
-                  className={styles.changeBtn}
-                  onClick={() =>
-                    handleOpenModal(
-                      container.id,
-                      container.type_of_container_id
-                    )
-                  }
-                >
-                  Change Type
-                </button>
-              </td>
-              <td>
-                <DeleteButton
-                  id={container.id}
-                  deleteFn={containerApi.deleteContainer}
-                  label="Container"
-                  data={`#${container.id}`}
-                  onSuccess={() => setPage(1)}
-                />
-              </td>
+      {isLoading ? (
+        <div className={styles.spinnerWrapper}>
+          <SpinnerLoading centered />
+        </div>
+      ) : (
+        <table className={styles.containersTable}>
+          <thead>
+            <tr>
+              <th>Station</th>
+              <th>Fill Level</th>
+              <th>Volume</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th
+                className={styles.sortableHeader}
+                onClick={() => {
+                  setPage(page);
+                  setOrdering((prev) =>
+                    prev === "last_updated" ? "-last_updated" : "last_updated"
+                  );
+                }}
+              >
+                Last updated
+                {ordering === "last_updated" && " ^ "}
+                {ordering === "-last_updated" && " v"}
+              </th>
+              <th>Actions</th>
+              <th>Delete</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentContainers.map((container) => (
+              <tr key={container.id}>
+                <td>{container.stationName}</td>
+                <td>{container.fill_level}%</td>
+                <td>{container.volume} л</td>
+                <td>{container.typeName}</td>
+                <td>
+                  <span
+                    className={`${styles.statusChip} ${
+                      styles[container.statusName.toLowerCase()] || ""
+                    }`}
+                  >
+                    {container.statusName}
+                  </span>
+                </td>
+                <td>{new Date(container.last_updated).toLocaleString()}</td>
+                <td>
+                  <button
+                    className={styles.changeBtn}
+                    onClick={() =>
+                      handleOpenModal(
+                        container.id,
+                        container.type_of_container_id
+                      )
+                    }
+                  >
+                    Change Type
+                  </button>
+                </td>
+                <td>
+                  <DeleteButton
+                    id={container.id}
+                    deleteFn={containerApi.deleteContainer}
+                    label="Container"
+                    data={`#${container.id}`}
+                    onSuccess={() => setPage(1)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
       <ModalLayout isOpen={isModalOpen} onClose={handleCloseModal}>
         {selectedContainer && (

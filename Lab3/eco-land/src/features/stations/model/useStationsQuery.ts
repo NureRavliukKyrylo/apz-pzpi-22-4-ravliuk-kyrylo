@@ -46,12 +46,13 @@ export const useStationsParamsQuery = (
   page?: number,
   searchTerm = "",
   statusName = "",
-  ordering = ""
+  ordering = "",
+  pageSize?: number
 ) => {
   const previousData = useRef<PaginatedStationsResponse | null>(null);
 
   const query = useQuery<PaginatedStationsResponse>({
-    queryKey: ["stations", page, searchTerm, statusName, ordering],
+    queryKey: ["stations", page, searchTerm, statusName, ordering, pageSize],
     queryFn: async () => {
       const params = new URLSearchParams();
 
@@ -69,6 +70,10 @@ export const useStationsParamsQuery = (
 
       if (ordering) {
         params.append("ordering", ordering);
+      }
+
+      if (pageSize !== undefined) {
+        params.append("page_size", pageSize.toString());
       }
 
       const response = await stationApi.getStationsWithParams(

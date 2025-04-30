@@ -17,6 +17,8 @@ import { SensorsTable } from "features/sensors/ui/SensorsTable";
 import SensorsPage from "pages/sensors/SensorsPage";
 import { CollectionSchedulesTable } from "features/schedules/ui/CollectionSchedulesTable";
 import SchedulesPage from "pages/schedules/SchedulesPage";
+import MapWidget from "widgets/map/MapWidget";
+import MapPage from "pages/map/MapPage";
 
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const accessToken = localStorage.getItem("access_token");
@@ -41,6 +43,7 @@ const App = () => {
         <Route path="/containers" element={<ContainersPage />} />
         <Route path="/sensors" element={<SensorsPage />} />
         <Route path="/schedules" element={<SchedulesPage />} />
+        <Route path="/map" element={<MapPage />} />
       </Routes>
     </Router>
   );

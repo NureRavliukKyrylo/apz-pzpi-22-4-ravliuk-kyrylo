@@ -1,0 +1,14 @@
+.container {
+  display: flex;
+  height: 90vh;
+  gap: 40px;
+}
+
+.sidebar {
+  width: 350px;
+  padding: 1rem;
+}
+
+.map {
+  flex: 1;
+}

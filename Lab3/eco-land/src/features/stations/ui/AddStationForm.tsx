@@ -10,12 +10,16 @@ type AddStationFormProps = {
   isOpen: boolean;
   onClose: () => void;
   statusOptions: { id: number; name: string }[];
+  defaultLat?: number;
+  defaultLng?: number;
 };
 
 export const AddStationForm = ({
   isOpen,
   onClose,
   statusOptions,
+  defaultLat,
+  defaultLng,
 }: AddStationFormProps) => {
   const [stationName, setStationName] = useState("");
   const [latitude, setLatitude] = useState<number | string>("");
@@ -27,6 +31,11 @@ export const AddStationForm = ({
   useEffect(() => {
     if (statusOptions.length > 0 && statusStation === null) {
       setStatusStation(statusOptions[0].id);
+    }
+
+    if (isOpen) {
+      if (defaultLat !== undefined) setLatitude(defaultLat);
+      if (defaultLng !== undefined) setLongitude(defaultLng);
     }
   }, [statusOptions, statusStation]);
 

@@ -8,6 +8,9 @@ import binMarker from "shared/assets/bin-marker.png";
 import { useStationsQuery } from "features/stations/model/useStationsQuery";
 import styles from "./InteractiveMap.module.scss";
 import { LocateButton } from "./LocateControl";
+import { RightClickHandler } from "shared/utils/ReactClickHandler";
+import { AddStationForm } from "features/stations/ui/AddStationForm";
+import { useStationStatusesQuery } from "features/stations/model/useStationStatusesQuery";
 
 const customIcon = new Icon({
   iconUrl: customMarker,
@@ -57,6 +60,21 @@ export default function InteractiveMap({
   );
 
   const { data: stations, isLoading: stationsLoading } = useStationsQuery();
+  const [contextMenuCoords, setContextMenuCoords] = useState<
+    [number, number] | null
+  >(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [newStationCoords, setNewStationCoords] = useState<
+    [number, number] | null
+  >(null);
+
+  const { data: statuses = [] } = useStationStatusesQuery();
+
+  const statusOptions = (statuses ?? []).map((status) => ({
+    id: status.id,
+    name: status.station_status_name,
+  }));
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -90,6 +108,13 @@ export default function InteractiveMap({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
+        <RightClickHandler
+          onRightClick={(latlng) => {
+            setContextMenuCoords([latlng.lat, latlng.lng]);
+            setIsConfirmModalOpen(true);
+          }}
+        />
+
         <Marker position={userPosition} icon={customIcon}>
           <Popup>Your position</Popup>
         </Marker>
@@ -115,7 +140,39 @@ export default function InteractiveMap({
         {flyToPosition && <FlyToPosition position={flyToPosition} />}
 
         {userPosition && <LocateButton position={userPosition} />}
+
+        {contextMenuCoords && (
+          <Popup
+            position={contextMenuCoords}
+            eventHandlers={{
+              remove: () => setContextMenuCoords(null),
+            }}
+          >
+            <div className={styles.confirmPopup}>
+              <h3>Add here new station?</h3>
+              <div className={styles.popupButtons}>
+                <button
+                  onClick={() => {
+                    setNewStationCoords(contextMenuCoords);
+                    setIsFormOpen(true);
+                    setContextMenuCoords(null);
+                  }}
+                >
+                  Yes
+                </button>
+              </div>
+            </div>
+          </Popup>
+        )}
       </MapContainer>
+
+      <AddStationForm
+        isOpen={isFormOpen}
+        onClose={() => setIsFormOpen(false)}
+        statusOptions={statusOptions}
+        defaultLat={newStationCoords?.[0]}
+        defaultLng={newStationCoords?.[1]}
+      />
     </>
   );
 }

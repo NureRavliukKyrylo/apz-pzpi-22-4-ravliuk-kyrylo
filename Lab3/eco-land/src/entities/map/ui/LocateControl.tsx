@@ -17,7 +17,7 @@ export function LocateButton({
 
   return (
     <button className={styles.locateButton} onClick={handleClick}>
-      test
+      Me
     </button>
   );
 }

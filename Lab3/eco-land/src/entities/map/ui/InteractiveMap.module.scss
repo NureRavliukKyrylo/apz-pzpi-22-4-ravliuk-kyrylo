@@ -20,3 +20,16 @@
     height: 20px;
   }
 }
+
+.popupButtons {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  button {
+    border-radius: 20px;
+    font-weight: 900;
+    background: #33ff00;
+    width: 70px;
+  }
+}

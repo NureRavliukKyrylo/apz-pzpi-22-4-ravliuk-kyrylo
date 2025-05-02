@@ -8,13 +8,16 @@ import {
   downloadReport,
   downloadReportContainer,
 } from "features/histories/model/downloadReports";
+import { useTranslation } from "react-i18next";
 import styles from "./WasteHistoryWidget.module.scss";
+import { parseUtcDate } from "shared/utils/parseData";
 
 const WasteHistoryWidget = () => {
   const { selectedStationId, setSelectedStationId, dateRange, setDateRange } =
     useFilters();
   const { data: stations = [] } = useStationsQuery();
   const { data: histories = [] } = useHistoriesQuery();
+  const { t } = useTranslation();
 
   const stationOptions = stations?.map((s) => ({
     id: s.id,
@@ -31,13 +34,13 @@ const WasteHistoryWidget = () => {
   });
 
   const chartData = filtered?.map((h) => ({
-    date: new Date(h.recycling_date).toLocaleString(),
+    date: parseUtcDate(h.recycling_date),
     amount: h.amount,
   }));
 
   return (
     <div className={styles.wasteWidget}>
-      <h1>Admin dashboard</h1>
+      <h1>{t("adminDashboard")}</h1>
       <div className={styles.buttonFilterBlock}>
         <div className={styles.filterBlock}>
           <Filters
@@ -50,12 +53,12 @@ const WasteHistoryWidget = () => {
         </div>
         <div className={styles.reportButtons}>
           <button onClick={() => downloadReport(dateRange[0], dateRange[1])}>
-            Report Stations
+            {t("reportStations")}
           </button>
           <button
             onClick={() => downloadReportContainer(dateRange[0], dateRange[1])}
           >
-            Report Containers
+            {t("reportContainers")}
           </button>
         </div>
       </div>

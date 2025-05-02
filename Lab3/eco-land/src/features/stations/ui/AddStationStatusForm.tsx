@@ -4,6 +4,7 @@ import styles from "./AddStationStatusForm.module.scss";
 import { useErrorStore } from "entities/error/useErrorStore";
 import { useAddStationStatus } from "../model/useAddStationStatus";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 type AddStationStatusFormProps = {
   isOpen: boolean;
@@ -17,10 +18,11 @@ export const AddStationStatusForm = ({
   const [statusName, setStatusName] = useState("");
   const { error, setError, clearError } = useErrorStore();
   const { mutate, isPending } = useAddStationStatus();
+  const { t } = useTranslation();
 
   const handleAddStatus = () => {
     if (statusName.trim() === "") {
-      setError("Status name cannot be empty.");
+      setError(t("statusNameEmpty"));
       return;
     }
 
@@ -34,9 +36,9 @@ export const AddStationStatusForm = ({
         if (error instanceof AxiosError) {
           const detail =
             error.response?.data?.error || error.response?.data?.message;
-          setError(detail ?? "Failed to update status.");
+          setError(detail ?? t("errorAddStatus"));
         } else {
-          setError("An unexpected error occurred.");
+          setError(t("unexpectedError"));
         }
       },
     });
@@ -45,10 +47,10 @@ export const AddStationStatusForm = ({
   return (
     <ModalLayout isOpen={isOpen} onClose={onClose}>
       <div className={styles.container}>
-        <h2>Add New Station Status</h2>
+        <h2>{t("addNewStationStatus")}</h2>
         <input
           type="text"
-          placeholder="Enter status name"
+          placeholder={t("enterStatusName")}
           value={statusName}
           onChange={(e) => setStatusName(e.target.value)}
           className={styles.input}
@@ -59,7 +61,7 @@ export const AddStationStatusForm = ({
           disabled={isPending}
           className={styles.button}
         >
-          {isPending ? "Adding..." : "Add Status"}
+          {isPending ? t("adding") : t("addStatus")}
         </button>
       </div>
     </ModalLayout>

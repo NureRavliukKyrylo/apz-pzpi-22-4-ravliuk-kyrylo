@@ -12,7 +12,7 @@ export const authApi = {
     const response = await apiClient.get<UserResponse>(`/customers/myself/`);
     return response.data;
   },
-  csrf: async () => {
+  setCsrf: async () => {
     const response = await apiClient.get(`/set-scrf/`);
     return response.data;
   },

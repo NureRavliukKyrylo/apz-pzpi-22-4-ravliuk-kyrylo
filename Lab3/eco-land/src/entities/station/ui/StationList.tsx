@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useStationsParamsQuery } from "features/stations/model/useStationsQuery";
 import { Pagination } from "shared/ui/pagination/Pagination";
 import styles from "./StationsList.module.scss";
@@ -11,6 +12,7 @@ export default function StationsList({
 }: {
   onStationSelect: (position: [number, number]) => void;
 }) {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
 
   const { data, isLoading, isError } = useStationsParamsQuery(
@@ -24,7 +26,7 @@ export default function StationsList({
   const stations = data?.results ?? [];
   const totalPages = Math.ceil((data?.count ?? 0) / STATIONS_PER_PAGE);
 
-  if (isError) return <div>Error loading stations.</div>;
+  if (isError) return <div>{t("errorLoadingStations")}</div>;
 
   return (
     <div className={styles.stationListWrapper}>
@@ -46,9 +48,11 @@ export default function StationsList({
               }
             >
               <h3>{station.station_of_containers_name}</h3>
-              <p>Station status: {station.statusName}</p>
               <p>
-                Last reserved:{" "}
+                {t("stationStatus")}: {station.statusName}
+              </p>
+              <p>
+                {t("lastReserved")}:{" "}
                 {new Date(station.last_reserved).toLocaleString()}
               </p>
             </div>

@@ -11,6 +11,8 @@ import { LocateButton } from "./LocateControl";
 import { RightClickHandler } from "shared/utils/ReactClickHandler";
 import { AddStationForm } from "features/stations/ui/AddStationForm";
 import { useStationStatusesQuery } from "features/stations/model/useStationStatusesQuery";
+import { useTranslation } from "react-i18next";
+import { parseUtcDate } from "shared/utils/parseData";
 
 const customIcon = new Icon({
   iconUrl: customMarker,
@@ -55,6 +57,7 @@ export default function InteractiveMap({
 }: {
   flyToPosition: LatLngExpression | null;
 }) {
+  const { t } = useTranslation();
   const [userPosition, setUserPosition] = useState<LatLngExpression | null>(
     null
   );
@@ -116,7 +119,7 @@ export default function InteractiveMap({
         />
 
         <Marker position={userPosition} icon={customIcon}>
-          <Popup>Your position</Popup>
+          <Popup>{t("yourPosition")}</Popup>
         </Marker>
 
         {stations?.map((station) => (
@@ -128,9 +131,9 @@ export default function InteractiveMap({
             <Popup>
               <strong>{station.station_of_containers_name}</strong>
               <br />
-              Status: {station.statusName}
+              {t("stationStatus")}: {station.statusName}
               <br />
-              Last reserved: {new Date(station.last_reserved).toLocaleString()}
+              {t("lastReserved")}: {parseUtcDate(station.last_reserved)}
             </Popup>
           </Marker>
         ))}
@@ -149,7 +152,7 @@ export default function InteractiveMap({
             }}
           >
             <div className={styles.confirmPopup}>
-              <h3>Add here new station?</h3>
+              <h3>{t("addStationQuestion")}</h3>
               <div className={styles.popupButtons}>
                 <button
                   onClick={() => {
@@ -158,7 +161,7 @@ export default function InteractiveMap({
                     setContextMenuCoords(null);
                   }}
                 >
-                  Yes
+                  {t("yes")}
                 </button>
               </div>
             </div>

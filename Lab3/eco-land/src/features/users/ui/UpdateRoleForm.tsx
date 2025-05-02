@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useUpdateRole } from "../model/useUpdateRole";
 import { useRoleStore } from "../../../entities/role/roleStore";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export const UpdateRoleForm = ({ userId, currentRole, onClose }: Props) => {
+  const { t } = useTranslation();
   const [newRole, setNewRole] = useState(currentRole);
   const { mutate, isPending } = useUpdateRole();
   const { roles, fetchRoles } = useRoleStore();
@@ -33,10 +35,10 @@ export const UpdateRoleForm = ({ userId, currentRole, onClose }: Props) => {
 
   return (
     <div className={styles.container}>
-      <h2>Change User Role</h2>
+      <h2>{t("changeUserRole")}</h2>
       <Options options={roles} selectedValue={newRole} onChange={setNewRole} />
       <button onClick={handleSubmit} disabled={isPending}>
-        {isPending ? <SpinnerLoading /> : "Update Role"}
+        {isPending ? <SpinnerLoading /> : t("updateRole")}
       </button>
     </div>
   );

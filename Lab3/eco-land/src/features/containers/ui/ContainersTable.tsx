@@ -11,6 +11,8 @@ import { UpdateContainerTypeForm } from "./UpdateContainerTypeForm";
 import { FilterSelect } from "shared/ui/filter/FilterOption";
 import { SearchInput } from "shared/ui/seach/SearchInput";
 import styles from "./ContainersTable.module.scss";
+import { useTranslation } from "react-i18next";
+import { parseUtcDate } from "shared/utils/parseData";
 
 const CONTAINERS_PER_PAGE = 8;
 
@@ -20,6 +22,7 @@ export const ContainersTable = () => {
   const [selectedStatusId, setSelectedStatusId] = useState(0);
   const [selectedTypeId, setSelectedTypeId] = useState(0);
   const [ordering, setOrdering] = useState("");
+  const { t } = useTranslation();
 
   const { data: statuses = [] } = useContainerStatusesQuery();
   const { data: types = [] } = useContainerTypesQuery();
@@ -62,20 +65,19 @@ export const ContainersTable = () => {
   const containers = data?.results ?? [];
 
   const totalPages = Math.ceil((data?.count ?? 0) / CONTAINERS_PER_PAGE);
-  const start = (page - 1) * CONTAINERS_PER_PAGE;
   const currentContainers = containers ?? [];
 
   if (isError) {
     return (
       <div className={styles.containersContainer}>
-        <div className={styles.error}>Error fetching containers.</div>
+        <div className={styles.error}>{t("errorFetchingContainers")}</div>
       </div>
     );
   }
 
   return (
     <div className={styles.containersContainer}>
-      <h1>Containers</h1>
+      <h1>{t("containers")}</h1>
 
       <div className={styles.controls}>
         <SearchInput
@@ -98,7 +100,7 @@ export const ContainersTable = () => {
             setSelectedStatusId(val);
             setPage(page);
           }}
-          placeholder="Choose Status"
+          placeholder={t("chooseStatus")}
         />
 
         <FilterSelect
@@ -113,7 +115,7 @@ export const ContainersTable = () => {
             setSelectedTypeId(val);
             setPage(page);
           }}
-          placeholder="Choose Type"
+          placeholder={t("chooseType")}
         />
       </div>
 
@@ -125,11 +127,11 @@ export const ContainersTable = () => {
         <table className={styles.containersTable}>
           <thead>
             <tr>
-              <th>Station</th>
-              <th>Fill Level</th>
-              <th>Volume</th>
-              <th>Type</th>
-              <th>Status</th>
+              <th>{t("stations")}</th>
+              <th>{t("fillLevel")}</th>
+              <th>{t("volume")}</th>
+              <th>{t("type")}</th>
+              <th>{t("status")}</th>
               <th
                 className={styles.sortableHeader}
                 onClick={() => {
@@ -139,12 +141,12 @@ export const ContainersTable = () => {
                   );
                 }}
               >
-                Last updated
+                {t("lastUpdated")}
                 {ordering === "last_updated" && " ^ "}
                 {ordering === "-last_updated" && " v"}
               </th>
-              <th>Actions</th>
-              <th>Delete</th>
+              <th>{t("actions")}</th>
+              <th>{t("delete")}</th>
             </tr>
           </thead>
           <tbody>
@@ -163,7 +165,11 @@ export const ContainersTable = () => {
                     {container.statusName}
                   </span>
                 </td>
-                <td>{new Date(container.last_updated).toLocaleString()}</td>
+                <td>
+                  {container.last_updated
+                    ? parseUtcDate(container.last_updated)
+                    : "—"}
+                </td>
                 <td>
                   <button
                     className={styles.changeBtn}
@@ -174,7 +180,7 @@ export const ContainersTable = () => {
                       )
                     }
                   >
-                    Change Type
+                    {t("changeType")}
                   </button>
                 </td>
                 <td>

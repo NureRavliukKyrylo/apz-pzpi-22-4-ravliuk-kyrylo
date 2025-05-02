@@ -5,6 +5,7 @@ import { useUpdateContainerType } from "../model/useUpdateContainerType";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import { Options } from "shared/ui/options/Options";
 import styles from "./UpdateContainerTypeForm.module.scss";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   containerId: number;
@@ -17,6 +18,7 @@ export const UpdateContainerTypeForm = ({
   currentType,
   onClose,
 }: Props) => {
+  const { t } = useTranslation();
   const [newType, setNewType] = useState(currentType);
   const [types, setTypes] = useState<TypeContainer[]>([]);
 
@@ -44,14 +46,14 @@ export const UpdateContainerTypeForm = ({
 
   return (
     <div className={styles.container}>
-      <h2>Change Container Type</h2>
+      <h2>{t("changeContainerType")}</h2>
       <Options
         options={options}
         selectedValue={newType}
         onChange={setNewType}
       />
       <button onClick={handleSubmit} disabled={isPending}>
-        {isPending ? <SpinnerLoading /> : "Update Type"}
+        {isPending ? <SpinnerLoading /> : t("updateType")}
       </button>
     </div>
   );

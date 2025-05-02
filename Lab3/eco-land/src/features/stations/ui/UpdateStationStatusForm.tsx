@@ -5,6 +5,7 @@ import { useUpdateStationStatus } from "../model/useUpdateStationStatus";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import { Options } from "shared/ui/options/Options";
 import styles from "./UpdateStationStatusForm.module.scss";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   stationId: number;
@@ -19,8 +20,8 @@ export const UpdateStationStatusForm = ({
 }: Props) => {
   const [newStatus, setNewStatus] = useState(currentStatus);
   const [statuses, setStatuses] = useState<StationStatus[]>([]);
-
   const { mutate, isPending } = useUpdateStationStatus();
+  const { t } = useTranslation();
 
   useEffect(() => {
     stationApi.getAllStationStatuses().then(setStatuses);
@@ -44,14 +45,14 @@ export const UpdateStationStatusForm = ({
 
   return (
     <div className={styles.container}>
-      <h2>Change Station Status</h2>
+      <h2>{t("changeStationStatus")}</h2>
       <Options
         options={options}
         selectedValue={newStatus}
         onChange={setNewStatus}
       />
       <button onClick={handleSubmit} disabled={isPending}>
-        {isPending ? <SpinnerLoading /> : "Update Status"}
+        {isPending ? <SpinnerLoading /> : t("updateStationStatusButton")}
       </button>
     </div>
   );

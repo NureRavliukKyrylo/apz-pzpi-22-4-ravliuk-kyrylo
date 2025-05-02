@@ -5,14 +5,16 @@ import { DeleteButton } from "shared/ui/buttons/deleteButton/deleteButton";
 import { sensorApi } from "../api/sensorsApi";
 import styles from "./SensorsTable.module.scss";
 import { Pagination } from "shared/ui/pagination/Pagination";
-import { useSortableData } from "shared/utils/useSortableData";
 import { useContainerTypesQuery } from "features/containers/model/useContainerTypesQuery";
 import { SearchInput } from "shared/ui/seach/SearchInput";
 import { FilterSelect } from "shared/ui/filter/FilterOption";
+import { useTranslation } from "react-i18next";
+import { parseUtcDate } from "shared/utils/parseData";
 
 const SENSORS_PER_PAGE = 8;
 
 export const SensorsTable = () => {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [selectedTypeId, setSelectedTypeId] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,17 +25,15 @@ export const SensorsTable = () => {
     types?.find((type) => type.id === selectedTypeId)?.type_name_container ||
     "";
 
-  const { data, isLoading, isError, isFetching } = useSensorsQuery(
+  const { data, isLoading, isError } = useSensorsQuery(
     page,
     searchTerm,
     selectedTypeName,
     ordering
   );
-  const sensors = data?.results ?? [];
 
+  const sensors = data?.results ?? [];
   const totalPages = Math.ceil((data?.count ?? 0) / SENSORS_PER_PAGE);
-  const start = (page - 1) * SENSORS_PER_PAGE;
-  const currentSensors = sensors ?? [];
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
@@ -48,14 +48,14 @@ export const SensorsTable = () => {
   if (isError) {
     return (
       <div className={styles.sensorsContainer}>
-        <div className={styles.error}>Error fetching sensors.</div>
+        <div className={styles.error}>{t("errorFetchingSensors")}</div>
       </div>
     );
   }
 
   return (
     <div className={styles.sensorsContainer}>
-      <h1>Sensors</h1>
+      <h1>{t("sensors")}</h1>
       <div className={styles.controls}>
         <SearchInput
           searchTerm={searchTerm}
@@ -70,7 +70,7 @@ export const SensorsTable = () => {
           }
           selectedValue={selectedTypeId}
           onChange={handleFilterChange}
-          placeholder="Choose Type"
+          placeholder={t("chooseType")}
         />
       </div>
 
@@ -82,7 +82,7 @@ export const SensorsTable = () => {
         <table className={styles.sensorsTable}>
           <thead>
             <tr>
-              <th>Sensor Value</th>
+              <th>{t("sensorValue")}</th>
               <th
                 className={styles.sortableHeader}
                 onClick={() => {
@@ -94,27 +94,31 @@ export const SensorsTable = () => {
                   );
                 }}
               >
-                Detected At
-                {ordering === "time_of_detect" && " ^ "}
-                {ordering === "-time_of_detect" && " v"}
+                {t("detectedAt")}
+                {ordering === "time_of_detect" && " ↑"}
+                {ordering === "-time_of_detect" && " ↓"}
               </th>
-              <th>Container Type</th>
-              <th>Station Name</th>
-              <th>Delete</th>
+              <th>{t("containerType")}</th>
+              <th>{t("stationName")}</th>
+              <th>{t("delete")}</th>
             </tr>
           </thead>
           <tbody>
-            {currentSensors?.map((sensor) => (
+            {sensors.map((sensor) => (
               <tr key={sensor.id}>
                 <td>{sensor.sensor_value}</td>
-                <td>{new Date(sensor.time_of_detect).toLocaleString()}</td>
+                <td>
+                  {sensor.time_of_detect
+                    ? parseUtcDate(sensor.time_of_detect)
+                    : "—"}
+                </td>
                 <td>{sensor.containerType?.type_name_container}</td>
                 <td>{sensor.station?.station_of_containers_name}</td>
                 <td>
                   <DeleteButton
                     id={sensor.id}
                     deleteFn={sensorApi.deleteSensor}
-                    label="Sensor"
+                    label={t("sensor")}
                     data={String(sensor.id)}
                     onSuccess={() => setPage(1)}
                   />

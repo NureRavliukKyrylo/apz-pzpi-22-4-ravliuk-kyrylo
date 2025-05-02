@@ -5,6 +5,7 @@ import { useErrorStore } from "entities/error/useErrorStore";
 import { Options } from "shared/ui/options/Options";
 import { AxiosError } from "axios";
 import styles from "./AddContainerForm.module.scss";
+import { useTranslation } from "react-i18next";
 
 type AddContainerFormProps = {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export const AddContainerForm = ({
   typeOptions,
   statusOptions,
 }: AddContainerFormProps) => {
+  const { t } = useTranslation();
   const [selectedStationId, setSelectedStationId] = useState<number | null>(
     null
   );
@@ -54,7 +56,7 @@ export const AddContainerForm = ({
       selectedTypeId === null ||
       selectedStatusId === null
     ) {
-      setError("All fields must be filled.");
+      setError(t("errorFillFields"));
       return;
     }
 
@@ -76,9 +78,9 @@ export const AddContainerForm = ({
           if (error instanceof AxiosError) {
             const detail =
               error.response?.data?.error || error.response?.data?.message;
-            setError(detail ?? "Failed to add container.");
+            setError(detail ?? t("errorAddStation"));
           } else {
-            setError("An unexpected error occurred.");
+            setError(t("unexpectedError"));
           }
         },
       }
@@ -88,7 +90,7 @@ export const AddContainerForm = ({
   return (
     <ModalLayout isOpen={isOpen} onClose={onClose}>
       <div className={styles.container}>
-        <h2>Add New Container</h2>
+        <h2>{t("addNewContainer")}</h2>
 
         {selectedStationId !== null && (
           <Options
@@ -121,7 +123,7 @@ export const AddContainerForm = ({
           disabled={isPending}
           className={styles.button}
         >
-          {isPending ? "Adding..." : "Add Container"}
+          {isPending ? t("adding") : t("addContainer")}
         </button>
       </div>
     </ModalLayout>

@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "./DateRangePicker.module.scss";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   startDate: Date | null;
@@ -31,6 +32,8 @@ export const DateRangePicker: FC<Props> = ({
   endDate,
   onChange,
 }) => {
+  const { t } = useTranslation();
+
   const handleRangeSelect = (key: string) => {
     const [start, end] = ranges[key];
     onChange([start, end]);
@@ -46,7 +49,7 @@ export const DateRangePicker: FC<Props> = ({
             onClick={() => handleRangeSelect(label)}
             type="button"
           >
-            {label}
+            {t(label)}
           </button>
         ))}
       </div>
@@ -62,7 +65,7 @@ export const DateRangePicker: FC<Props> = ({
         selectsRange
         dateFormat="dd.MM.yyyy HH:mm"
         isClearable
-        placeholderText="Choose range"
+        placeholderText={t("chooseRange")}
         className={styles.input}
       />
     </div>

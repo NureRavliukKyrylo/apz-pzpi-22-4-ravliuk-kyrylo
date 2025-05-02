@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { StationsTable } from "features/stations/ui/StationsTable";
 import { StationStatusesTable } from "features/stations/ui/StationStatusesTable";
 import styles from "./NavigationMenu.module.scss";
@@ -9,6 +10,7 @@ import { AddButton } from "shared/ui/buttons/addButton/AddButton";
 import { useErrorStore } from "entities/error/useErrorStore";
 
 export const NavigationMenuStations = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<"stations" | "statuses">(
     "stations"
   );
@@ -44,14 +46,14 @@ export const NavigationMenuStations = () => {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        <h1>Admin</h1>
+        <h1>{t("adminPanel")}</h1>
         <button
           className={`${styles.menuButton} ${
             activeTab === "stations" ? styles.active : ""
           }`}
           onClick={() => handleTabChange("stations")}
         >
-          Stations
+          {t("stations")}
         </button>
         <button
           className={`${styles.menuButton} ${
@@ -59,10 +61,14 @@ export const NavigationMenuStations = () => {
           }`}
           onClick={() => handleTabChange("statuses")}
         >
-          Statuses
+          {t("statuses")}
         </button>
-        <AddButton onClick={handleAddStationClick}>Add new station</AddButton>
-        <AddButton onClick={handleAddStatusClick}>Add new status</AddButton>
+        <AddButton onClick={handleAddStationClick}>
+          {t("addNewStation")}
+        </AddButton>
+        <AddButton onClick={handleAddStatusClick}>
+          {t("addNewStatus")}
+        </AddButton>
       </div>
 
       <div className={styles.content}>

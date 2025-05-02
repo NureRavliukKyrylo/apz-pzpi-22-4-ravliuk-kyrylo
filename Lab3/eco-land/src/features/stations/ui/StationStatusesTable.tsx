@@ -8,6 +8,7 @@ import { DeleteButton } from "shared/ui/buttons/deleteButton/deleteButton";
 import { stationApi } from "../api/stationsApi";
 import styles from "./StationStatusesTable.module.scss";
 import { useErrorStore } from "entities/error/useErrorStore";
+import { useTranslation } from "react-i18next";
 
 const STATUSES_PER_PAGE = 8;
 
@@ -22,6 +23,7 @@ export const StationStatusesTable = () => {
     status_station_name: string;
   } | null>(null);
   const { clearError } = useErrorStore();
+  const { t } = useTranslation();
 
   const statuses = data?.results ?? [];
   const totalPages = Math.ceil((data?.count ?? 0) / STATUSES_PER_PAGE);
@@ -50,20 +52,20 @@ export const StationStatusesTable = () => {
   if (isError) {
     return (
       <div className={styles.stationStatusContainer}>
-        <div className={styles.error}>Error fetching statuses.</div>
+        <div className={styles.error}>{t("errorFetchingStatuses")}</div>
       </div>
     );
   }
 
   return (
     <div className={styles.stationStatusContainer}>
-      <h1>Station Statuses</h1>
+      <h1>{t("stationStatuses")}</h1>
       <table className={styles.stationStatusTable}>
         <thead>
           <tr>
-            <th>Status Name</th>
-            <th>Actions</th>
-            <th>Delete</th>
+            <th>{t("statusName")}</th>
+            <th>{t("actions")}</th>
+            <th>{t("delete")}</th>
           </tr>
         </thead>
         <tbody>
@@ -80,14 +82,14 @@ export const StationStatusesTable = () => {
                     )
                   }
                 >
-                  Change Status
+                  {t("changeStatus")}
                 </button>
               </td>
               <td>
                 <DeleteButton
                   id={status.id}
                   deleteFn={stationApi.deleteStationStatus}
-                  label="Status"
+                  label={t("status")}
                   data={status.station_status_name}
                   onSuccess={() => setPage(1)}
                 />

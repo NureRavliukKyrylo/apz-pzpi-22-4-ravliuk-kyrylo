@@ -1,13 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLogin } from "../model/useLogin";
 import styles from "./LoginForm.module.scss";
 import { useErrorStore } from "entities/error/useErrorStore";
+import { authApi } from "../api/authApi";
 
 export const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { error, setError, clearError } = useErrorStore();
   const { mutate, isPending } = useLogin();
+
+  useEffect(() => {
+    authApi.setCsrf();
+  }, []);
 
   const validateForm = () => {
     if (!username || !password) {

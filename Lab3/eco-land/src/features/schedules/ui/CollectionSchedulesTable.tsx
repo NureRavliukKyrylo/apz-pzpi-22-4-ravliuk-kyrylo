@@ -8,10 +8,13 @@ import styles from "./CollectionSchedulesTable.module.scss";
 import { Pagination } from "shared/ui/pagination/Pagination";
 import { ModalLayout } from "shared/ui/modalLayout/ModalLayout";
 import { SearchInput } from "shared/ui/seach/SearchInput";
+import { useTranslation } from "react-i18next";
+import { parseUtcDate } from "shared/utils/parseData";
 
 const SCHEDULES_PER_PAGE = 8;
 
 export const CollectionSchedulesTable = () => {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,14 +54,14 @@ export const CollectionSchedulesTable = () => {
   if (isError) {
     return (
       <div className={styles.schedulesContainer}>
-        <div className={styles.error}>Error fetching collection schedules.</div>
+        <div className={styles.error}>{t("errorFetchingSchedules")}</div>
       </div>
     );
   }
 
   return (
     <div className={styles.schedulesContainer}>
-      <h1>Collection Schedules</h1>
+      <h1>{t("collectionSchedules")}</h1>
       <div className={styles.controls}>
         <SearchInput
           searchTerm={searchTerm}
@@ -85,23 +88,26 @@ export const CollectionSchedulesTable = () => {
                   );
                 }}
               >
-                Collection date
+                {t("collectionDate")}
                 {ordering === "collection_date" && " ^ "}
                 {ordering === "-collection_date" && " v"}
               </th>
-              <th>Station Name</th>
-              <th>Update</th>
-              <th>Delete</th>
+              <th>{t("stationName")}</th>
+              <th>{t("update")}</th>
+              <th>{t("delete")}</th>
             </tr>
           </thead>
           <tbody>
             {currentSchedules.map((schedule) => (
               <tr key={schedule.id}>
                 <td>
-                  {new Date(schedule.collection_date).toLocaleDateString()}
+                  {schedule.collection_date
+                    ? parseUtcDate(schedule.collection_date)
+                    : "—"}
                 </td>
                 <td>
-                  {schedule.station?.station_of_containers_name || "No Station"}
+                  {schedule.station?.station_of_containers_name ||
+                    t("noStation")}
                 </td>
                 <td>
                   <button
@@ -110,14 +116,14 @@ export const CollectionSchedulesTable = () => {
                       handleOpenModal(schedule.id, schedule.collection_date)
                     }
                   >
-                    Update date
+                    {t("updateDate")}
                   </button>
                 </td>
                 <td>
                   <DeleteButton
                     id={schedule.id}
                     deleteFn={collectionScheduleApi.deleteSchedule}
-                    label="Schedule"
+                    label={t("schedule")}
                     data={String(schedule.id)}
                     onSuccess={() => setPage(1)}
                   />

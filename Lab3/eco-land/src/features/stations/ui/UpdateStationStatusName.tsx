@@ -4,6 +4,7 @@ import { useErrorStore } from "entities/error/useErrorStore";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import { useUpdateStationStatusName } from "../model/useUpdateStationStatusName";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 type UpdateStationStatusNameFormProps = {
   statusId: number;
@@ -21,10 +22,11 @@ export const UpdateStationStatusNameForm = ({
   const [statusName, setStatusName] = useState(currentStatusName);
   const { error, setError, clearError } = useErrorStore();
   const { mutate, isPending } = useUpdateStationStatusName();
+  const { t } = useTranslation();
 
   const handleUpdate = () => {
     if (!statusName.trim()) {
-      setError("Status name cannot be empty.");
+      setError(t("statusNameEmptyError"));
       return;
     }
 
@@ -40,9 +42,9 @@ export const UpdateStationStatusNameForm = ({
           if (error instanceof AxiosError) {
             const detail =
               error.response?.data?.error || error.response?.data?.message;
-            setError(detail ?? "Failed to update role.");
+            setError(detail ?? t("updateStatusFailed"));
           } else {
-            setError("An unexpected error occurred.");
+            setError(t("unexpectedError"));
           }
         },
       }
@@ -51,20 +53,20 @@ export const UpdateStationStatusNameForm = ({
 
   return (
     <div className={styles.formContainer}>
-      <h2>Edit Station Status</h2>
+      <h2>{t("editStationStatus")}</h2>
       <div className={styles.inputBlock}>
         <input
           type="text"
           value={statusName}
           onChange={(e) => setStatusName(e.target.value)}
-          placeholder="Enter new status name"
+          placeholder={t("enterNewStatusName")}
           disabled={isPending}
         />
       </div>
       {error && <p className={styles.error}>{error}</p>}
       <div className={styles.buttonContainer}>
         <button onClick={handleUpdate} disabled={isPending}>
-          {isPending ? <SpinnerLoading /> : "Update Status"}
+          {isPending ? <SpinnerLoading /> : t("updateStatus")}
         </button>
       </div>
     </div>

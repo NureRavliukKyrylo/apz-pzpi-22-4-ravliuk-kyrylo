@@ -11,6 +11,8 @@ import { FilterSelect } from "shared/ui/filter/FilterOption";
 import { stationApi } from "../api/stationsApi";
 import { useStationsParamsQuery } from "../model/useStationsQuery";
 import styles from "./StationsTable.module.scss";
+import { useTranslation } from "react-i18next";
+import { parseUtcDate } from "shared/utils/parseData";
 
 const STATIONS_PER_PAGE = 8;
 
@@ -19,7 +21,7 @@ export const StationsTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatusId, setSelectedStatusId] = useState(0);
   const [ordering, setOrdering] = useState("");
-
+  const { t } = useTranslation();
   const { data: statuses } = useStationStatusesQuery();
   const selectedStatusName =
     statuses?.find((status) => status.id === selectedStatusId)
@@ -72,7 +74,7 @@ export const StationsTable = () => {
 
   return (
     <div className={styles.stationsContainer}>
-      <h1>Stations</h1>
+      <h1>{t("stations")}</h1>
 
       <div className={styles.controls}>
         <SearchInput
@@ -88,7 +90,7 @@ export const StationsTable = () => {
           }
           selectedValue={selectedStatusId}
           onChange={handleFilterChange}
-          placeholder="Choose Status"
+          placeholder={t("chooseStatus")}
         />
       </div>
 
@@ -100,9 +102,9 @@ export const StationsTable = () => {
         <table className={styles.stationsTable}>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Latitude</th>
-              <th>Longitude</th>
+              <th>{t("name")}</th>
+              <th>{t("latitude")}</th>
+              <th>{t("longitude")}</th>
               <th
                 className={styles.sortableHeader}
                 onClick={() => {
@@ -114,13 +116,13 @@ export const StationsTable = () => {
                   );
                 }}
               >
-                Last Reserved
+                {t("lastReserved")}
                 {ordering === "last_reserved" && " ^ "}
                 {ordering === "-last_reserved" && " v"}
               </th>
-              <th>Status</th>
-              <th>Actions</th>
-              <th>Delete</th>
+              <th>{t("status")}</th>
+              <th>{t("actions")}</th>
+              <th>{t("delete")}</th>
             </tr>
           </thead>
           <tbody>
@@ -129,7 +131,11 @@ export const StationsTable = () => {
                 <td>{station.station_of_containers_name}</td>
                 <td>{station.latitude_location}</td>
                 <td>{station.longitude_location}</td>
-                <td>{station.last_reserved}</td>
+                <td>
+                  {station.last_reserved
+                    ? parseUtcDate(station.last_reserved)
+                    : "—"}
+                </td>
                 <td>
                   <span
                     className={`${styles.statusChip} ${
@@ -149,7 +155,7 @@ export const StationsTable = () => {
                       )
                     }
                   >
-                    Change Status
+                    {t("changeStatus")}
                   </button>
                 </td>
                 <td>

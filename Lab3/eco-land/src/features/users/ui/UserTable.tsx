@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useUsersQuery } from "../model/useUsersQuery";
 import styles from "./UserTable.module.scss";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
@@ -14,6 +15,7 @@ import { FilterSelect } from "shared/ui/filter/FilterOption";
 const USERS_PER_PAGE = 8;
 
 export const UsersTable = () => {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRoleId, setSelectedRoleId] = useState(0);
@@ -62,14 +64,14 @@ export const UsersTable = () => {
   if (isError) {
     return (
       <div className={styles.usersContainer}>
-        <div className={styles.error}>Error fetching users.</div>
+        <div className={styles.error}>{t("errorFetchingUsers")}</div>
       </div>
     );
   }
 
   return (
     <div className={styles.usersContainer}>
-      <h1>Users</h1>
+      <h1>{t("usersTitle")}</h1>
       <div className={styles.controls}>
         <SearchInput
           searchTerm={searchTerm}
@@ -84,7 +86,7 @@ export const UsersTable = () => {
           }
           selectedValue={selectedRoleId}
           onChange={handleFilterChange}
-          placeholder="Choose Role"
+          placeholder={t("chooseRole")}
         />
       </div>
       {isLoading ? (
@@ -95,11 +97,11 @@ export const UsersTable = () => {
         <table className={styles.usersTable}>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Actions</th>
-              <th>Delete</th>
+              <th>{t("name")}</th>
+              <th>{t("email")}</th>
+              <th>{t("role")}</th>
+              <th>{t("actions")}</th>
+              <th>{t("delete")}</th>
             </tr>
           </thead>
           <tbody>
@@ -121,14 +123,14 @@ export const UsersTable = () => {
                     className={styles.changeBtn}
                     onClick={() => handleOpenModal(Number(user.id), user.role)}
                   >
-                    Change Role
+                    {t("changeRole")}
                   </button>
                 </td>
                 <td>
                   <DeleteButton
                     id={user.id}
                     deleteFn={usersApi.deleteUser}
-                    label="User"
+                    label={t("user")}
                     data={user.username}
                     onSuccess={() => setPage(1)}
                   />

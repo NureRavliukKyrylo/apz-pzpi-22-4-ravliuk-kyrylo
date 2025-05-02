@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ModalLayout } from "shared/ui/modalLayout/ModalLayout";
 import { useAddContainerStatus } from "../model/useAddContainerStatus";
 import { useErrorStore } from "entities/error/useErrorStore";
 import { AxiosError } from "axios";
 import styles from "./AddContainerStatusForm.module.scss";
+import { useTranslation } from "react-i18next";
 
 type AddContainerStatusFormProps = {
   isOpen: boolean;
@@ -14,13 +15,14 @@ export const AddContainerStatusForm = ({
   isOpen,
   onClose,
 }: AddContainerStatusFormProps) => {
+  const { t } = useTranslation();
   const [statusName, setStatusName] = useState("");
   const { error, setError, clearError } = useErrorStore();
   const { mutate, isPending } = useAddContainerStatus();
 
   const handleAddStatus = async () => {
     if (statusName.trim() === "") {
-      setError("Status name is required.");
+      setError(t("statusNameRequired"));
       return;
     }
 
@@ -34,9 +36,9 @@ export const AddContainerStatusForm = ({
         if (error instanceof AxiosError) {
           const detail =
             error.response?.data?.error || error.response?.data?.message;
-          setError(detail ?? "Failed to add container status.");
+          setError(detail ?? t("addStatusFailed"));
         } else {
-          setError("An unexpected error occurred.");
+          setError(t("unexpectedError"));
         }
       },
     });
@@ -45,10 +47,10 @@ export const AddContainerStatusForm = ({
   return (
     <ModalLayout isOpen={isOpen} onClose={onClose}>
       <div className={styles.container}>
-        <h2>Add New Container Status</h2>
+        <h2>{t("addNewContainerStatus")}</h2>
         <input
           type="text"
-          placeholder="Enter status name"
+          placeholder={t("enterStatusName")}
           value={statusName}
           onChange={(e) => setStatusName(e.target.value)}
           className={styles.input}
@@ -59,7 +61,7 @@ export const AddContainerStatusForm = ({
           disabled={isPending}
           className={styles.button}
         >
-          {isPending ? "Adding..." : "Add Status"}
+          {isPending ? t("adding") : t("addStatus")}
         </button>
       </div>
     </ModalLayout>

@@ -6,6 +6,7 @@ import { useErrorStore } from "entities/error/useErrorStore";
 import { Options } from "shared/ui/options/Options";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 type AddScheduleFormProps = {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export const AddScheduleForm = ({
   onClose,
   stations,
 }: AddScheduleFormProps) => {
+  const { t } = useTranslation();
   const [selectedStationId, setSelectedStationId] = useState<number | null>(
     null
   );
@@ -35,7 +37,7 @@ export const AddScheduleForm = ({
 
   const handleAddSchedule = async () => {
     if (selectedStationId === null || collectionDate.trim() === "") {
-      setError("All fields must be filled.");
+      setError(t("allFieldsMustBeFilled"));
       return;
     }
 
@@ -55,9 +57,9 @@ export const AddScheduleForm = ({
           if (error instanceof AxiosError) {
             const detail =
               error.response?.data?.error || error.response?.data?.message;
-            setError(detail ?? "Failed to add schedule.");
+            setError(detail ?? t("failedToAddSchedule"));
           } else {
-            setError("An unexpected error occurred.");
+            setError(t("unexpectedError"));
           }
         },
       }
@@ -67,7 +69,7 @@ export const AddScheduleForm = ({
   return (
     <ModalLayout isOpen={isOpen} onClose={onClose}>
       <div className={styles.container}>
-        <h2>Add New Collection Schedule</h2>
+        <h2>{t("addNewCollectionSchedule")}</h2>
 
         {selectedStationId !== null && (
           <Options
@@ -84,7 +86,7 @@ export const AddScheduleForm = ({
           onChange={(e) => setCollectionDate(e.target.value)}
           min={today}
           className={styles.input}
-          placeholder="Select collection date"
+          placeholder={t("selectCollectionDate")}
         />
 
         {error && <p className={styles.error}>{error}</p>}
@@ -94,7 +96,7 @@ export const AddScheduleForm = ({
           disabled={isPending}
           className={styles.button}
         >
-          {isPending ? <SpinnerLoading /> : "Add Schedule"}
+          {isPending ? <SpinnerLoading /> : t("addSchedule")}
         </button>
       </div>
     </ModalLayout>

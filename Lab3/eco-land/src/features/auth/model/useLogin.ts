@@ -28,8 +28,6 @@ export const useLogin = () => {
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("token_expiry", expiryTime.toString());
 
-        authApi.csrf();
-
         navigate("/admin");
       } else {
         setError("U don't have permission of admin");

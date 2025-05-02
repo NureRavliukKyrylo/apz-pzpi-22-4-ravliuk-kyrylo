@@ -5,6 +5,7 @@ import styles from "./AddRoleForm.module.scss";
 import { useErrorStore } from "entities/error/useErrorStore";
 import { AxiosError } from "axios";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 type AddRoleFormProps = {
   isOpen: boolean;
@@ -12,6 +13,7 @@ type AddRoleFormProps = {
 };
 
 export const AddRoleForm = ({ isOpen, onClose }: AddRoleFormProps) => {
+  const { t } = useTranslation();
   const [roleName, setRoleName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { error, setError } = useErrorStore();
@@ -19,7 +21,7 @@ export const AddRoleForm = ({ isOpen, onClose }: AddRoleFormProps) => {
 
   const handleAddRole = async () => {
     if (roleName.trim() === "") {
-      setError("Role name cannot be empty.");
+      setError(t("errorEmptyRoleName"));
       return;
     }
 
@@ -35,18 +37,12 @@ export const AddRoleForm = ({ isOpen, onClose }: AddRoleFormProps) => {
       onClose();
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.error("Axios error response:", error.response);
-
         const detail =
           error.response?.data?.error || error.response?.data?.message;
 
-        if (detail) {
-          setError(detail);
-        } else {
-          setError("Failed to add role.");
-        }
+        setError(detail ?? t("errorAddRole"));
       } else {
-        setError("An unexpected error occurred.");
+        setError(t("unexpectedError"));
       }
     } finally {
       setIsLoading(false);
@@ -56,10 +52,10 @@ export const AddRoleForm = ({ isOpen, onClose }: AddRoleFormProps) => {
   return (
     <ModalLayout isOpen={isOpen} onClose={onClose}>
       <div className={styles.container}>
-        <h2>Add New Role</h2>
+        <h2>{t("addNewRole")}</h2>
         <input
           type="text"
-          placeholder="Enter role name"
+          placeholder={t("enterRoleName")}
           value={roleName}
           onChange={(e) => setRoleName(e.target.value)}
           className={styles.input}
@@ -70,7 +66,7 @@ export const AddRoleForm = ({ isOpen, onClose }: AddRoleFormProps) => {
           disabled={isLoading}
           className={styles.button}
         >
-          {isLoading ? "Adding..." : "Add Role"}
+          {isLoading ? t("adding") : t("addRole")}
         </button>
       </div>
     </ModalLayout>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./SearchInput.module.scss";
+import { useTranslation } from "react-i18next";
 
 type SearchInputProps = {
   searchTerm: string;
@@ -13,6 +14,7 @@ export const SearchInput = ({
   debounceDelay = 300,
 }: SearchInputProps) => {
   const [localValue, setLocalValue] = useState(searchTerm);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -30,7 +32,7 @@ export const SearchInput = ({
       type="text"
       value={localValue}
       onChange={(e) => setLocalValue(e.target.value)}
-      placeholder="Searching..."
+      placeholder={t("searching")}
     />
   );
 };

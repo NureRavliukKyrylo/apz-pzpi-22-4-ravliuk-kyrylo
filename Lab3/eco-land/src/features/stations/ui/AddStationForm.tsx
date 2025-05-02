@@ -5,6 +5,7 @@ import { useAddStation } from "../model/useAddStation";
 import { useErrorStore } from "entities/error/useErrorStore";
 import { Options } from "shared/ui/options/Options";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 type AddStationFormProps = {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export const AddStationForm = ({
   defaultLat,
   defaultLng,
 }: AddStationFormProps) => {
+  const { t } = useTranslation();
   const [stationName, setStationName] = useState("");
   const [latitude, setLatitude] = useState<number | string>("");
   const [longitude, setLongitude] = useState<number | string>("");
@@ -46,7 +48,7 @@ export const AddStationForm = ({
       longitude === "" ||
       statusStation === null
     ) {
-      setError("All fields must be filled.");
+      setError(t("errorFillFields"));
       return;
     }
 
@@ -70,9 +72,9 @@ export const AddStationForm = ({
           if (error instanceof AxiosError) {
             const detail =
               error.response?.data?.error || error.response?.data?.message;
-            setError(detail ?? "Failed to add station.");
+            setError(detail ?? t("errorAddStation"));
           } else {
-            setError("An unexpected error occurred.");
+            setError(t("unexpectedError"));
           }
         },
       }
@@ -82,24 +84,24 @@ export const AddStationForm = ({
   return (
     <ModalLayout isOpen={isOpen} onClose={onClose}>
       <div className={styles.container}>
-        <h2>Add New Station</h2>
+        <h2>{t("addNewStation")}</h2>
         <input
           type="text"
-          placeholder="Enter station name"
+          placeholder={t("enterName")}
           value={stationName}
           onChange={(e) => setStationName(e.target.value)}
           className={styles.input}
         />
         <input
           type="number"
-          placeholder="Enter latitude"
+          placeholder={t("enterLatitude")}
           value={latitude}
           onChange={(e) => setLatitude(e.target.value)}
           className={styles.input}
         />
         <input
           type="number"
-          placeholder="Enter longitude"
+          placeholder={t("enterLongitude")}
           value={longitude}
           onChange={(e) => setLongitude(e.target.value)}
           className={styles.input}
@@ -117,7 +119,7 @@ export const AddStationForm = ({
           disabled={isPending}
           className={styles.button}
         >
-          {isPending ? "Adding..." : "Add Station"}
+          {isPending ? t("adding") : t("addStationButton")}
         </button>
       </div>
     </ModalLayout>

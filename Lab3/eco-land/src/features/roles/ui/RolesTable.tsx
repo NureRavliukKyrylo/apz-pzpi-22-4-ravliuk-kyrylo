@@ -7,6 +7,7 @@ import { rolesApi } from "../api/rolesApi";
 import { ModalLayout } from "shared/ui/modalLayout/ModalLayout";
 import { UpdateRoleForm } from "./UpdateRoleForm";
 import styles from "./RolesTable.module.scss";
+import { useTranslation } from "react-i18next";
 
 const ROLES_PER_PAGE = 8;
 
@@ -19,8 +20,9 @@ export const RolesTable = () => {
     name: string;
   } | null>(null);
 
-  const roles = data?.results ?? [];
+  const { t } = useTranslation();
 
+  const roles = data?.results ?? [];
   const totalPages = Math.ceil((data?.count ?? 0) / ROLES_PER_PAGE);
   const start = (page - 1) * ROLES_PER_PAGE;
   const currentRoles = roles ?? [];
@@ -44,16 +46,16 @@ export const RolesTable = () => {
       {isLoading ? (
         <SpinnerLoading centered />
       ) : isError ? (
-        <div className={styles.error}>Error fetching roles.</div>
+        <div className={styles.error}>{t("errorFetchingRoles")}</div>
       ) : (
         <>
-          <h1>Roles</h1>
+          <h1>{t("rolesTitle")}</h1>
           <table className={styles.rolesTable}>
             <thead>
               <tr>
-                <th>Role Name</th>
-                <th>Update</th>
-                <th>Delete</th>
+                <th>{t("roleName")}</th>
+                <th>{t("update")}</th>
+                <th>{t("delete")}</th>
               </tr>
             </thead>
             <tbody>
@@ -65,14 +67,14 @@ export const RolesTable = () => {
                       className={styles.editBtn}
                       onClick={() => handleOpenModal(role.id, role.name)}
                     >
-                      Update role
+                      {t("updateRole")}
                     </button>
                   </td>
                   <td>
                     <DeleteButton
                       id={role.id}
                       deleteFn={rolesApi.deleteRoles}
-                      label="Role"
+                      label={t("role")}
                       data={role.name}
                       onSuccess={() => setPage(1)}
                     />

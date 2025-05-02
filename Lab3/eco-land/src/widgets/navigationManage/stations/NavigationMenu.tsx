@@ -1,13 +1,17 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { RolesTable } from "features/roles/ui/RolesTable";
 import { UsersTable } from "features/users/ui/UserTable";
 import styles from "./NavigationMenu.module.scss";
 import { AddRoleForm } from "features/roles/ui/AddRoleForm";
 import { AddButton } from "shared/ui/buttons/addButton/AddButton";
+import { useErrorStore } from "entities/error/useErrorStore";
 
 export const NavigationMenu = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<"roles" | "users">("roles");
   const [isAddRoleFormOpen, setIsAddRoleFormOpen] = useState(false);
+  const { clearError } = useErrorStore();
 
   const handleTabChange = (tab: "roles" | "users") => {
     setActiveTab(tab);
@@ -19,19 +23,20 @@ export const NavigationMenu = () => {
 
   const handleCloseModal = () => {
     setIsAddRoleFormOpen(false);
+    clearError();
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        <h1>Admin</h1>
+        <h1>{t("adminPanel")}</h1>
         <button
           className={`${styles.menuButton} ${
             activeTab === "roles" ? styles.active : ""
           }`}
           onClick={() => handleTabChange("roles")}
         >
-          Roles
+          {t("roles")}
         </button>
         <button
           className={`${styles.menuButton} ${
@@ -39,9 +44,9 @@ export const NavigationMenu = () => {
           }`}
           onClick={() => handleTabChange("users")}
         >
-          Users
+          {t("users")}
         </button>
-        <AddButton onClick={handleAddRoleClick}>Add new role</AddButton>
+        <AddButton onClick={handleAddRoleClick}>{t("addNewRole")}</AddButton>
       </div>
 
       <div className={styles.content}>

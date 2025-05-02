@@ -5,6 +5,7 @@ import { useAddSensor } from "../model/useAddSensor";
 import { useErrorStore } from "entities/error/useErrorStore";
 import { Options } from "shared/ui/options/Options";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 type AddSensorFormProps = {
   isOpen: boolean;
@@ -17,8 +18,10 @@ export const AddSensorForm = ({
   onClose,
   containerOptions,
 }: AddSensorFormProps) => {
+  const { t } = useTranslation();
   const [containerId, setContainerId] = useState<number | null>(null);
   const [sensorValue, setSensorValue] = useState<number | string>("");
+
   const { error, setError, clearError } = useErrorStore();
   const { mutate, isPending } = useAddSensor();
 
@@ -30,7 +33,7 @@ export const AddSensorForm = ({
 
   const handleAddSensor = async () => {
     if (containerId === null || sensorValue === "") {
-      setError("All fields must be filled.");
+      setError(t("allFieldsMustBeFilled"));
       return;
     }
 
@@ -50,9 +53,9 @@ export const AddSensorForm = ({
           if (error instanceof AxiosError) {
             const detail =
               error.response?.data?.error || error.response?.data?.message;
-            setError(detail ?? "Failed to add sensor.");
+            setError(detail ?? t("failedToAddSensor"));
           } else {
-            setError("An unexpected error occurred.");
+            setError(t("unexpectedError"));
           }
         },
       }
@@ -62,7 +65,7 @@ export const AddSensorForm = ({
   return (
     <ModalLayout isOpen={isOpen} onClose={onClose}>
       <div className={styles.container}>
-        <h2>Add New Sensor</h2>
+        <h2>{t("addNewSensor")}</h2>
 
         {containerOptions.length > 0 && containerId !== null && (
           <Options
@@ -74,7 +77,7 @@ export const AddSensorForm = ({
 
         <input
           type="number"
-          placeholder="Enter sensor value"
+          placeholder={t("enterSensorValue")}
           value={sensorValue}
           onChange={(e) => setSensorValue(e.target.value)}
           className={styles.input}
@@ -87,7 +90,7 @@ export const AddSensorForm = ({
           disabled={isPending}
           className={styles.button}
         >
-          {isPending ? "Adding..." : "Add Sensor"}
+          {isPending ? t("adding") : t("addSensor")}
         </button>
       </div>
     </ModalLayout>

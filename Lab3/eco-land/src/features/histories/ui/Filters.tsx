@@ -1,7 +1,9 @@
 import { FC } from "react";
 import { FilterSelect } from "shared/ui/filter/FilterOption";
 import { DateRangePicker } from "./DateTimeRangePicker";
+import { useTranslation } from "react-i18next";
 import styles from "./Filters.module.scss";
+
 interface Props {
   stations: { id: number; name: string }[];
   selectedStationId: number;
@@ -16,20 +18,24 @@ export const Filters: FC<Props> = ({
   onStationChange,
   dateRange,
   onDateChange,
-}) => (
-  <>
-    <div className={styles.filtersBlock}>
-      <FilterSelect
-        options={stations}
-        selectedValue={selectedStationId || 0}
-        onChange={onStationChange}
-        placeholder="Choose station"
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <div className={styles.filtersBlock}>
+        <FilterSelect
+          options={stations}
+          selectedValue={selectedStationId || 0}
+          onChange={onStationChange}
+          placeholder={t("chooseStation")}
+        />
+      </div>
+      <DateRangePicker
+        startDate={dateRange[0]}
+        endDate={dateRange[1]}
+        onChange={onDateChange}
       />
-    </div>
-    <DateRangePicker
-      startDate={dateRange[0]}
-      endDate={dateRange[1]}
-      onChange={onDateChange}
-    />
-  </>
-);
+    </>
+  );
+};

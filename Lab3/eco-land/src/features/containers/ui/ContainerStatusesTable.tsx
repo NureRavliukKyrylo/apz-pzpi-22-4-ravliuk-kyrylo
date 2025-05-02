@@ -7,10 +7,12 @@ import { Pagination } from "shared/ui/pagination/Pagination";
 import { ModalLayout } from "shared/ui/modalLayout/ModalLayout";
 import { UpdateContainerStatusNameForm } from "./UpdateContainerStatusNameForm";
 import styles from "./ContainerStatusesTable.module.scss";
+import { useTranslation } from "react-i18next";
 
 const STATUS_PER_PAGE = 8;
 
 export const ContainerStatusesTable = () => {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<{
@@ -22,7 +24,6 @@ export const ContainerStatusesTable = () => {
     useContainerStatusesParamsQuery(page);
 
   const containerStatuses = data?.results ?? [];
-
   const totalPages = Math.ceil((data?.count ?? 0) / STATUS_PER_PAGE);
   const start = (page - 1) * STATUS_PER_PAGE;
   const currentStatuses = containerStatuses ?? [];
@@ -32,7 +33,7 @@ export const ContainerStatusesTable = () => {
   }
 
   if (isError) {
-    return <div className={styles.error}>Failed to load statuses</div>;
+    return <div className={styles.error}>{t("loadStatusesError")}</div>;
   }
 
   const handleOpenModal = (statusId: number, currentStatusName: string) => {
@@ -47,13 +48,13 @@ export const ContainerStatusesTable = () => {
 
   return (
     <div className={styles.statusesContainer}>
-      <h1>Container Statuses</h1>
+      <h1>{t("containerStatuses")}</h1>
       <table className={styles.statusesContainerTable}>
         <thead>
           <tr>
-            <th>Status Name</th>
-            <th>Update</th>
-            <th>Actions</th>
+            <th>{t("statusName")}</th>
+            <th>{t("update")}</th>
+            <th>{t("actions")}</th>
           </tr>
         </thead>
         <tbody>
@@ -65,14 +66,14 @@ export const ContainerStatusesTable = () => {
                   onClick={() => handleOpenModal(status.id, status.status_name)}
                   className={styles.changeBtn}
                 >
-                  Update Status
+                  {t("updateStatus")}
                 </button>
               </td>
               <td>
                 <DeleteButton
                   id={status.id}
                   deleteFn={containerApi.deleteContainerStatus}
-                  label="Status"
+                  label={t("status")}
                   data={status.status_name}
                   onSuccess={() => refetch()}
                 />

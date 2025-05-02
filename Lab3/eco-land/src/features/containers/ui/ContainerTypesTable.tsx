@@ -7,10 +7,12 @@ import { Pagination } from "shared/ui/pagination/Pagination";
 import styles from "./ContainerTypesTable.module.scss";
 import { ModalLayout } from "shared/ui/modalLayout/ModalLayout";
 import { UpdateContainerTypeDataForm } from "./UpdateContainerTypeDataForm";
+import { useTranslation } from "react-i18next";
 
 const CONTAINERS_PER_PAGE = 8;
 
 export const ContainerTypesTable = () => {
+  const { t } = useTranslation();
   const [page, setPage] = useState(1);
   const { data, isLoading, isError, refetch } =
     useContainerTypesParamsQuery(page);
@@ -22,7 +24,6 @@ export const ContainerTypesTable = () => {
   } | null>(null);
 
   const containerTypes = data?.results ?? [];
-
   const totalPages = Math.ceil((data?.count ?? 0) / CONTAINERS_PER_PAGE);
   const currentTypes = containerTypes;
 
@@ -31,7 +32,7 @@ export const ContainerTypesTable = () => {
   }
 
   if (isError) {
-    return <div className={styles.error}>Failed to load container types</div>;
+    return <div className={styles.error}>{t("loadContainerTypesFailed")}</div>;
   }
 
   const handleOpenModal = (
@@ -54,14 +55,14 @@ export const ContainerTypesTable = () => {
 
   return (
     <div className={styles.typesContainer}>
-      <h1>Container Types</h1>
+      <h1>{t("containerTypes")}</h1>
       <table className={styles.typesContainerTable}>
         <thead>
           <tr>
-            <th>Type Name</th>
-            <th>Volume</th>
-            <th>Update</th>
-            <th>Actions</th>
+            <th>{t("typeName")}</th>
+            <th>{t("volume")}</th>
+            <th>{t("update")}</th>
+            <th>{t("actions")}</th>
           </tr>
         </thead>
         <tbody>
@@ -80,14 +81,14 @@ export const ContainerTypesTable = () => {
                   }
                   className={styles.changeBtn}
                 >
-                  Update Type
+                  {t("updateType")}
                 </button>
               </td>
               <td>
                 <DeleteButton
                   id={type.id}
                   deleteFn={containerApi.deleteContainerType}
-                  label="Container Type"
+                  label={t("containerType")}
                   data={type.type_name_container}
                   onSuccess={() => {
                     refetch();

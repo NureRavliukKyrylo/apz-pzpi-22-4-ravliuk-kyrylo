@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { SensorsTable } from "features/sensors/ui/SensorsTable";
 import { AddSensorForm } from "features/sensors/ui/AddSensorForm";
 import styles from "../stations/NavigationMenu.module.scss";
@@ -7,6 +8,7 @@ import { useErrorStore } from "entities/error/useErrorStore";
 import { useContainersQuery } from "features/containers/model/useContainersQuery";
 
 export const NavigationMenuSensors = () => {
+  const { t } = useTranslation();
   const [isAddSensorFormOpen, setIsAddSensorFormOpen] = useState(false);
   const { clearError } = useErrorStore();
 
@@ -29,9 +31,11 @@ export const NavigationMenuSensors = () => {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        <h1>Sensors Admin</h1>
+        <h1>{t("adminPanel")}</h1>
 
-        <AddButton onClick={handleAddSensorClick}>Add new sensor</AddButton>
+        <AddButton onClick={handleAddSensorClick}>
+          {t("addNewSensor")}
+        </AddButton>
       </div>
 
       <div className={styles.content}>

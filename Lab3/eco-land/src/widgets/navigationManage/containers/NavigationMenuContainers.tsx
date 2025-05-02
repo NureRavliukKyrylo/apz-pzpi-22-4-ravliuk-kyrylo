@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ContainersTable } from "features/containers/ui/ContainersTable";
 import { AddContainerForm } from "features/containers/ui/AddContainerForm";
 import { AddButton } from "shared/ui/buttons/addButton/AddButton";
@@ -13,6 +14,7 @@ import { AddContainerTypeForm } from "features/containers/ui/AddContainerTypeFor
 import { useStationsQuery } from "features/stations/model/useStationsQuery";
 
 export const NavigationMenuContainers = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<
     "containers" | "statuses" | "types"
   >("containers");
@@ -68,14 +70,14 @@ export const NavigationMenuContainers = () => {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        <h1>Containers</h1>
+        <h1>{t("adminPanel")}</h1>
         <button
           className={`${styles.menuButton} ${
             activeTab === "containers" ? styles.active : ""
           }`}
           onClick={() => handleTabChange("containers")}
         >
-          Containers
+          {t("containers")}
         </button>
 
         <button
@@ -84,7 +86,7 @@ export const NavigationMenuContainers = () => {
           }`}
           onClick={() => handleTabChange("statuses")}
         >
-          Statuses
+          {t("statuses")}
         </button>
 
         <button
@@ -93,17 +95,17 @@ export const NavigationMenuContainers = () => {
           }`}
           onClick={() => handleTabChange("types")}
         >
-          Types
+          {t("types")}
         </button>
 
         <AddButton onClick={handleAddContainerClick}>
-          Add new container
+          {t("addNewContainer")}
         </AddButton>
         <AddButton onClick={handleAddContainerStatusClick}>
-          <label>Add new container status</label>
+          {t("addNewContainerStatus")}
         </AddButton>
         <AddButton onClick={handleAddContainerTypeClick}>
-          Add new container type
+          {t("addNewContainerType")}
         </AddButton>
       </div>
 

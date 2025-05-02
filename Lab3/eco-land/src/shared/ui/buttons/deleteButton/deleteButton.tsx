@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ModalLayout } from "../../modalLayout/ModalLayout";
 import { SpinnerLoading } from "shared/ui/loading/SpinnerLoading";
 import styles from "./DeleteButton.module.scss";
@@ -17,10 +18,11 @@ export const DeleteButton = ({
   id,
   deleteFn,
   onSuccess,
-  buttonLabel = "Delete",
+  buttonLabel,
   label = "item",
   data,
 }: DeleteButtonProps) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -42,20 +44,16 @@ export const DeleteButton = ({
         className={styles.button}
         disabled={isPending}
       >
-        {isPending ? <SpinnerLoading /> : buttonLabel}
+        {isPending ? <SpinnerLoading /> : buttonLabel || t("delete")}
       </button>
 
       <ModalLayout isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className={styles.modalContent}>
           <p className={styles.modalMessage}>
-            Are you sure you want to delete <strong>{label}</strong>
-            {data && (
-              <>
-                {" "}
-                with <strong>{data}</strong>
-              </>
-            )}
-            ?
+            {t("deleteConfirmation", {
+              label,
+              data,
+            })}
           </p>
           <div className={styles.actions}>
             <button
@@ -63,14 +61,14 @@ export const DeleteButton = ({
               className={styles.confirmBtn}
               disabled={isPending}
             >
-              Yes
+              {t("yes")}
             </button>
             <button
               onClick={() => setIsModalOpen(false)}
               className={styles.cancelBtn}
               disabled={isPending}
             >
-              Cancel
+              {t("cancel")}
             </button>
           </div>
         </div>

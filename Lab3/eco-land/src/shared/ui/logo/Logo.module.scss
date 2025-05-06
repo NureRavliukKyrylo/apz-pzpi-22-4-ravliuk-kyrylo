@@ -4,6 +4,7 @@
   display: flex;
   align-items: center;
   gap: 18px;
+  text-decoration: none;
 }
 
 .icon {
@@ -11,4 +12,9 @@
   height: 24px;
   background-color: white;
   transform: rotate(45deg);
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
 }

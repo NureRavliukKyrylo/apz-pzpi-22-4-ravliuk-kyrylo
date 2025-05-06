@@ -8,12 +8,13 @@ export const Navbar = () => {
 
   const changeLanguage = (lng: "en" | "ua") => {
     i18n.changeLanguage(lng);
+    localStorage.setItem("i18nextLng", lng);
   };
 
   return (
     <nav className={styles.navbar}>
       <div className={styles.left}>
-        <Logo label="Eco Land" />
+        <Logo label="Eco Land" to="/admin" />
       </div>
       <div className={styles.navigationMenu}>
         <NavigationLink to="/users" label={t("navbar.users")} />
@@ -22,7 +23,6 @@ export const Navbar = () => {
         <NavigationLink to="/containers" label={t("navbar.containers")} />
         <NavigationLink to="/sensors" label={t("navbar.sensors")} />
         <NavigationLink to="/schedules" label={t("navbar.schedules")} />
-        <NavigationLink to="/reports" label={t("navbar.reports")} />
         <div className={styles.langSwitcher}>
           <button
             className={i18n.language === "en" ? styles.active : ""}

@@ -150,6 +150,7 @@ const resources = {
         schedules: "Schedules",
         reports: "Reports",
       },
+      backup: "Download backup Database",
     },
   },
   ua: {
@@ -299,13 +300,14 @@ const resources = {
         schedules: "Графіки",
         reports: "Звіти",
       },
+      backup: "Завантажити резервну копію бази даних",
     },
   },
 };
 
 i18n.use(initReactI18next).init({
   resources,
-  lng: "en",
+  lng: localStorage.getItem("i18nextLng") || "en",
   fallbackLng: "en",
   interpolation: {
     escapeValue: false,

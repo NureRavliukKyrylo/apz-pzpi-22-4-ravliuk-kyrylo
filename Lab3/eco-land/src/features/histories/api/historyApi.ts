@@ -55,4 +55,20 @@ export const historyApi = {
       throw error;
     }
   },
+  downloadBackup: async (): Promise<Blob> => {
+    try {
+      const response = await apiClient.post("/back-up", null, {
+        responseType: "blob",
+      });
+
+      if (response.status !== 200) {
+        throw new Error("Не вдалося завантажити звіт.");
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error("Помилка при завантаженні звіту:", error);
+      throw error;
+    }
+  },
 };

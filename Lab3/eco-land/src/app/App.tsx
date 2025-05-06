@@ -20,16 +20,13 @@ import SchedulesPage from "pages/schedules/SchedulesPage";
 import MapWidget from "widgets/map/MapWidget";
 import MapPage from "pages/map/MapPage";
 import WasteHistoryWidget from "widgets/wasteHistory/WasteHistoryWidget";
-
-const PrivateRoute = ({ children }: { children: JSX.Element }) => {
-  const accessToken = localStorage.getItem("access_token");
-  return accessToken ? children : <Navigate to="/login" />;
-};
+import PrivateRoute from "./providers/PrivateRoute";
 
 const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/admin"
@@ -39,13 +36,54 @@ const App = () => {
             </PrivateRoute>
           }
         />
-        <Route path="/users" element={<UsersPage />} />
-        <Route path="/stations" element={<StationsPage />} />
-        <Route path="/containers" element={<ContainersPage />} />
-        <Route path="/sensors" element={<SensorsPage />} />
-        <Route path="/schedules" element={<SchedulesPage />} />
-        <Route path="/map" element={<MapPage />} />
-        <Route path="/reports" element={<AdminPage />} />
+        <Route
+          path="/users"
+          element={
+            <PrivateRoute>
+              <UsersPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/stations"
+          element={
+            <PrivateRoute>
+              <StationsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/containers"
+          element={
+            <PrivateRoute>
+              <ContainersPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/sensors"
+          element={
+            <PrivateRoute>
+              <SensorsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/schedules"
+          element={
+            <PrivateRoute>
+              <SchedulesPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/map"
+          element={
+            <PrivateRoute>
+              <MapPage />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </Router>
   );

@@ -3,7 +3,7 @@ import styles from "./navigationLink.module.scss";
 
 type NavigationLinkProps = {
   to: string;
-  label: string;
+  label?: string;
 };
 
 export const NavigationLink = ({ to, label }: NavigationLinkProps) => (

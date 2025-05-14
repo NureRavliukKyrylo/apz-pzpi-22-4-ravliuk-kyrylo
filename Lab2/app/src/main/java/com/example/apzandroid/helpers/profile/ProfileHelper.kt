@@ -39,7 +39,7 @@ object ProfileHelper {
     fun updateUserProfile(userId: Int, name: String, email: String, csrfToken: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         val updateRequest = UpdateCustomerRequest(name, email)
 
-        RetrofitClient.accountService.updateUser(userId, updateRequest, csrfToken).enqueue(object : Callback<UpdateCustomerResponse> {
+        RetrofitClient.accountService.updateUser(userId.toString(), updateRequest, csrfToken).enqueue(object : Callback<UpdateCustomerResponse> {
             override fun onResponse(call: Call<UpdateCustomerResponse>, response: Response<UpdateCustomerResponse>) {
                 if (response.isSuccessful) {
                     onSuccess()
@@ -58,7 +58,7 @@ object ProfileHelper {
     fun changePassword(userId: Int, oldPassword: String, newPassword: String, csrfToken: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         val changePasswordRequest = ChangePasswordRequest(oldPassword, newPassword)
 
-        RetrofitClient.accountService.changePassword(userId, changePasswordRequest, csrfToken).enqueue(object : Callback<ChangePasswordResponse> {
+        RetrofitClient.accountService.changePassword(userId.toString(), changePasswordRequest, csrfToken).enqueue(object : Callback<ChangePasswordResponse> {
             override fun onResponse(call: Call<ChangePasswordResponse>, response: Response<ChangePasswordResponse>) {
                 if (response.isSuccessful) {
                     onSuccess()

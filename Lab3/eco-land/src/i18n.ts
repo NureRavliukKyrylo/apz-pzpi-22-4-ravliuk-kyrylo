@@ -151,8 +151,6 @@ const resources = {
         reports: "Reports",
       },
       backup: "Download backup Database",
-      station: "Station",
-      container: "Container",
     },
   },
   ua: {
@@ -303,8 +301,6 @@ const resources = {
         reports: "Звіти",
       },
       backup: "Завантажити резервну копію бази даних",
-      station: "Станція",
-      container: "Контейнер",
     },
   },
 };

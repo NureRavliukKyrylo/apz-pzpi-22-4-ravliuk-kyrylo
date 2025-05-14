@@ -25,10 +25,10 @@ interface AccountService {
     fun roleUser(@Path("id") id: String): Call<RoleResponse>
 
     @PUT("api/customers/{id}/")
-    fun updateUser(@Path("id") id: Int, @Body request: UpdateCustomerRequest,@Header("X-CSRFToken") csrfToken: String): Call<UpdateCustomerResponse>
+    fun updateUser(@Path("id") id: String, @Body request: UpdateCustomerRequest,@Header("X-CSRFToken") csrfToken: String): Call<UpdateCustomerResponse>
 
     @PATCH("api/customers/{id}/change-password/")
-    fun changePassword(@Path("id") id: Int, @Body request: ChangePasswordRequest, @Header("X-CSRFToken") csrfToken: String): Call<ChangePasswordResponse>
+    fun changePassword(@Path("id") id: String, @Body request: ChangePasswordRequest, @Header("X-CSRFToken") csrfToken: String): Call<ChangePasswordResponse>
 
    @POST("api/register-token/")
         fun registerDeviceToken(

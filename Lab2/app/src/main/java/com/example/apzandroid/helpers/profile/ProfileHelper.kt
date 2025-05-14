@@ -36,7 +36,7 @@ object ProfileHelper {
         })
     }
 
-    fun updateUserProfile(userId: String, name: String, email: String, csrfToken: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun updateUserProfile(userId: Int, name: String, email: String, csrfToken: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         val updateRequest = UpdateCustomerRequest(name, email)
 
         RetrofitClient.accountService.updateUser(userId, updateRequest, csrfToken).enqueue(object : Callback<UpdateCustomerResponse> {
@@ -50,11 +50,12 @@ object ProfileHelper {
 
             override fun onFailure(call: Call<UpdateCustomerResponse>, t: Throwable) {
                 onFailure("Error: ${t.localizedMessage}")
+
             }
         })
     }
 
-    fun changePassword(userId: String, oldPassword: String, newPassword: String, csrfToken: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+    fun changePassword(userId: Int, oldPassword: String, newPassword: String, csrfToken: String, onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         val changePasswordRequest = ChangePasswordRequest(oldPassword, newPassword)
 
         RetrofitClient.accountService.changePassword(userId, changePasswordRequest, csrfToken).enqueue(object : Callback<ChangePasswordResponse> {

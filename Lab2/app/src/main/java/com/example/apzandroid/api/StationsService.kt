@@ -30,4 +30,11 @@ interface StationsService {
     @PATCH("/api/stationOfContainers/{id}/update-status/")
     fun updateStationStatus(@Path("id") id: String, @Header("X-CSRFToken") csrfToken: String,@Body request: UpdateStationStatusRequest): Call<StationsResponse>
 
+    @GET("api/stationOfContainers/")
+    fun filterStations(
+        @Header("X-CSRFToken") csrfToken: String,
+        @Query("search") search: String?,
+        @Query("status_station__station_status_name") status: String?
+    ): Call<List<StationsResponse>>
+
 }

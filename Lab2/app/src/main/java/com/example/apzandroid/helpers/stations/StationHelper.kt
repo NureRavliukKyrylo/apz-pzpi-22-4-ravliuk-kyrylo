@@ -136,5 +136,26 @@ object StationHelper {
         })
     }
 
+    fun loadFilteredStations(
+        csrfToken: String,
+        search: String?,
+        statusId: Int?,
+        onSuccess: (List<StationsResponse>) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        loadStations(csrfToken, { stations ->
+            val filteredStations = stations.filter { station ->
+                val matchesSearch = search.isNullOrBlank() ||
+                        station.station_of_containers_name.contains(search, ignoreCase = true)
+                val matchesStatus = statusId == null || station.status_station == statusId
+                matchesSearch && matchesStatus
+            }
+            onSuccess(filteredStations)
+        }, { error ->
+            onError(error)
+        })
+    }
+
+
 
 }

@@ -30,7 +30,7 @@ class SettingsProfileFragment : Fragment() {
     private lateinit var newPasswordEditText: EditText
     private lateinit var changePasswordButton: Button
 
-    private var userId: String = ""
+    private var userId: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -95,7 +95,7 @@ class SettingsProfileFragment : Fragment() {
                 activity?.supportFragmentManager?.popBackStack()
             },
             onFailure = { errorMessage ->
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
+                activity?.supportFragmentManager?.popBackStack()
             }
         )
     }

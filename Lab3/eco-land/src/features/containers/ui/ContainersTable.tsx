@@ -187,8 +187,8 @@ export const ContainersTable = () => {
                   <DeleteButton
                     id={container.id}
                     deleteFn={containerApi.deleteContainer}
-                    label="Container"
-                    data={`#${container.id}`}
+                    label={t("container")}
+                    data={`${container.typeName} - ${container.stationName} `}
                     onSuccess={() => setPage(1)}
                   />
                 </td>

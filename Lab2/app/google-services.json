@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "472182648402",
+    "project_id": "kotlinapz",
+    "storage_bucket": "kotlinapz.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:472182648402:android:40d6eae7d7cda34b9b798b",
+        "android_client_info": {
+          "package_name": "com.example.apzandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "472182648402-2gl53ds0snvcvsfq0f6q1m3aeou0bs3f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.apzandroid",
+            "certificate_hash": "92bf25ce779c41f474d36b2d6eae0de69940d7aa"
+          }
+        },
+        {
+          "client_id": "472182648402-80s67b049541ce7ok21dng8lli119t6s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFrApIH3H1JQyk1LJEDSCMyxcK3s9Z2Jo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "472182648402-80s67b049541ce7ok21dng8lli119t6s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

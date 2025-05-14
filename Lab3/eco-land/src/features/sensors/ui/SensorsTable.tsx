@@ -119,7 +119,7 @@ export const SensorsTable = () => {
                     id={sensor.id}
                     deleteFn={sensorApi.deleteSensor}
                     label={t("sensor")}
-                    data={String(sensor.id)}
+                    data={`${sensor.containerType?.type_name_container} - ${sensor.station?.station_of_containers_name}`}
                     onSuccess={() => setPage(1)}
                   />
                 </td>

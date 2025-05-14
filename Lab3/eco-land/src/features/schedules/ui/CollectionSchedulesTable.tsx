@@ -33,7 +33,6 @@ export const CollectionSchedulesTable = () => {
   const schedules = data?.results ?? [];
 
   const totalPages = Math.ceil((data?.count ?? 0) / SCHEDULES_PER_PAGE);
-  const start = (page - 1) * SCHEDULES_PER_PAGE;
   const currentSchedules = schedules ?? [];
 
   const handleOpenModal = (scheduleId: number, collectionDate: string) => {
@@ -124,7 +123,7 @@ export const CollectionSchedulesTable = () => {
                     id={schedule.id}
                     deleteFn={collectionScheduleApi.deleteSchedule}
                     label={t("schedule")}
-                    data={String(schedule.id)}
+                    data={`${schedule.collection_date} - ${schedule.station?.station_of_containers_name}`}
                     onSuccess={() => setPage(1)}
                   />
                 </td>

@@ -162,7 +162,7 @@ export const StationsTable = () => {
                   <DeleteButton
                     id={station.id}
                     deleteFn={stationApi.deleteStation}
-                    label="Station"
+                    label={t("station")}
                     data={station.station_of_containers_name}
                     onSuccess={() => setPage(1)}
                   />

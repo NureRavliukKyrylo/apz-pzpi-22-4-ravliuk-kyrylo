@@ -10,10 +10,6 @@ export const LoginForm = () => {
   const { error, setError, clearError } = useErrorStore();
   const { mutate, isPending } = useLogin();
 
-  useEffect(() => {
-    authApi.setCsrf();
-  }, []);
-
   const validateForm = () => {
     if (!username || !password) {
       setError("Please fill out all fields");

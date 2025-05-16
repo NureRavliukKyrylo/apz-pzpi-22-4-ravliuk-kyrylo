@@ -61,6 +61,7 @@ class WasteHistoryFragment : Fragment() {
             endDate,
             onSuccess = { filteredHistory ->
                 wasteHistoryList = filteredHistory
+                stationNames.clear()
 
                 if (wasteHistoryList.isEmpty()) {
                     emptyTextView.visibility = View.VISIBLE
@@ -79,15 +80,23 @@ class WasteHistoryFragment : Fragment() {
     }
 
     private fun loadStationNames() {
+        var loadedCount = 0
+        val total = wasteHistoryList.size
+
         wasteHistoryList.forEach { history ->
-            if (!stationNames.containsKey(history.station_id)) {
-                StationHelper.fetchStationName(csrfToken, history.station_id, { stationName ->
-                    stationNames[history.station_id] = stationName
+            StationHelper.fetchStationName(csrfToken, history.station_id, { stationName ->
+                stationNames[history.station_id] = stationName
+                loadedCount++
+                if (loadedCount == total) {
                     updateRecyclerView()
-                }, { error ->
-                    Log.e("WasteHistoryFragment", error)
-                })
-            }
+                }
+            }, { error ->
+                Log.e("WasteHistoryFragment", error)
+                loadedCount++
+                if (loadedCount == total) {
+                    updateRecyclerView()
+                }
+            })
         }
     }
 

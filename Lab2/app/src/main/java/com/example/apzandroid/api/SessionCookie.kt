@@ -7,9 +7,15 @@ class SessionCookie : CookieJar {
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
         cookieStore[url.host] = cookies.toMutableList()
+        println("Saved cookies for ${url.host}:")
+        cookies.forEach { println(" - ${it.name}=${it.value}") }
     }
 
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
-        return cookieStore[url.host] ?: emptyList()
+        val cookies = cookieStore[url.host] ?: emptyList()
+        println("Loading cookies for ${url.host}:")
+        cookies.forEach { println(" - ${it.name}=${it.value}") }
+        return cookies
     }
 }
+

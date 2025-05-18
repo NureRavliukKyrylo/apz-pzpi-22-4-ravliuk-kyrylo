@@ -8,8 +8,6 @@ def polynomial_regression_forecast(dates, amounts, future_days, degree=2):
     print(dates)
     days = [(date - dates[0]).days for date in dates]
 
-
-    # Перевірка: чи достатньо точок для регресії
     if len(set(days)) <= degree:
         print(days)
         raise ValueError(f"Not enough unique data points for polynomial degree {degree}")

@@ -42,6 +42,11 @@ class RegisterDeviceTokenView(APIView):
 
     def post(self, request):
         print("Received data:", request.data)
+
+        print("Received cookies:", request.COOKIES)
+
+        user = get_user(request)
+                        
         serializer = DeviceTokenSerializer(data=request.data)
         
         if not serializer.is_valid():
@@ -50,7 +55,7 @@ class RegisterDeviceTokenView(APIView):
         
         token = serializer.validated_data['token']
         DeviceToken.objects.update_or_create(
-            user=request.user,
+            user=user,
             defaults={'token': token}
         )
         return Response({'message': 'Token registered'}, status=200)

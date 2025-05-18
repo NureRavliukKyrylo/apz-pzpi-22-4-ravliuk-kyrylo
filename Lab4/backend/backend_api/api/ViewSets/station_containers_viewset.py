@@ -2,7 +2,7 @@ from backend_api.api.ViewSets.base_viewset import GenericViewSet,StandardResults
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
-from backend_api.api.permissions import IsAdminAuthenticated,IsAdminOrOperatorOrUserAuthenticated
+from backend_api.api.permissions import IsAdminAuthenticated,IsAdminOrOperatorOrUserAuthenticated,IsAdminOrOperatorAuthenticated
 from ..serializers import StationOfContainersSerializer,UpdateStationStatusSerializer
 from ...models import StationOfContainers
 from rest_framework.response import Response
@@ -27,6 +27,8 @@ class StationOfContainersViewSet(ListModelMixin, viewsets.GenericViewSet,Generic
     def get_permissions(self):
         if self.action == 'list' or self.action == 'retrieve':
             permission_classes = [IsAdminOrOperatorOrUserAuthenticated]
+        elif self.action == 'update_status':
+            permission_classes = [IsAdminOrOperatorAuthenticated]
         else:
             permission_classes = [IsAdminAuthenticated]
         return [permission() for permission in permission_classes]

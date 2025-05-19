@@ -91,7 +91,11 @@ export const StationStatusesTable = () => {
                   deleteFn={stationApi.deleteStationStatus}
                   label={t("status")}
                   data={status.station_status_name}
-                  onSuccess={() => setPage(1)}
+                  onSuccess={() => {
+                    const isLastItemOnPage =
+                      currentStatuses.length === 1 && page > 1;
+                    setPage(isLastItemOnPage ? page - 1 : page);
+                  }}
                 />
               </td>
             </tr>

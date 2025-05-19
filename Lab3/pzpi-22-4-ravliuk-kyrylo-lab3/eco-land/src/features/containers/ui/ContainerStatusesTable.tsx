@@ -75,7 +75,11 @@ export const ContainerStatusesTable = () => {
                   deleteFn={containerApi.deleteContainerStatus}
                   label={t("status")}
                   data={status.status_name}
-                  onSuccess={() => refetch()}
+                  onSuccess={() => {
+                    const isLastItemOnPage =
+                      currentStatuses.length === 1 && page > 1;
+                    setPage(isLastItemOnPage ? page - 1 : page);
+                  }}
                 />
               </td>
             </tr>

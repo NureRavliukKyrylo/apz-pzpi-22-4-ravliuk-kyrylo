@@ -30,7 +30,15 @@ export const useUsersQuery = (page: number, searchTerm = "", roleName = "") => {
 
       const enrichedUsers = await Promise.all(
         rawUsers.map(async (user) => {
-          const roleName = await rolesApi.fetchRole(user.role);
+          let roleName = "Unknown";
+
+          if (user.role !== null) {
+            const fetchedRole = await rolesApi.fetchRole(user.role);
+            if (fetchedRole) {
+              roleName = fetchedRole;
+            }
+          }
+
           return { ...user, roleName };
         })
       );

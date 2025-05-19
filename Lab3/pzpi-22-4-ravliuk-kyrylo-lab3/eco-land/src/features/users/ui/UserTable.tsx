@@ -132,7 +132,11 @@ export const UsersTable = () => {
                     deleteFn={usersApi.deleteUser}
                     label={t("user")}
                     data={user.username}
-                    onSuccess={() => setPage(1)}
+                    onSuccess={() => {
+                      const isLastItemOnPage =
+                        currentUsers.length === 1 && page > 1;
+                      setPage(isLastItemOnPage ? page - 1 : page);
+                    }}
                   />
                 </td>
               </tr>

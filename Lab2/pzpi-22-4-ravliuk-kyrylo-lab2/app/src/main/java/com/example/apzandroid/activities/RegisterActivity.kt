@@ -17,6 +17,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.messaging.FirebaseMessaging
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -98,10 +99,20 @@ class RegisterActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString()
 
             if (username.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
-                AuthHelper.registerUser(this, username, email, password)
-            } else {
-                Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show()
+                FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val token = task.result
+
+                        AuthHelper.registerUser(this, username, email, password, token)
+                    } else {
+                        Toast.makeText(this, "Failed to get Firebase token", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
             }
+            else {
+                    Toast.makeText(this, "Fill all fields", Toast.LENGTH_SHORT).show()
+                }
         }
 
         loginLinkText.setOnClickListener {
@@ -124,7 +135,15 @@ class RegisterActivity : AppCompatActivity() {
             try {
                 val account = task.getResult(ApiException::class.java)
                 account?.let {
-                    AuthHelper.firebaseAuthWithGoogle(this, account)
+                    FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val token = task.result
+                            AuthHelper.firebaseAuthWithGoogle(this, account, token)
+                        } else {
+                            Toast.makeText(this, "Failed to get Firebase token", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
                 }
             } catch (e: ApiException) {
                 Toast.makeText(this, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()

@@ -91,8 +91,9 @@ export const ContainerTypesTable = () => {
                   label={t("containerType")}
                   data={type.type_name_container}
                   onSuccess={() => {
-                    refetch();
-                    setPage(1);
+                    const isLastItemOnPage =
+                      currentTypes.length === 1 && page > 1;
+                    setPage(isLastItemOnPage ? page - 1 : page);
                   }}
                 />
               </td>

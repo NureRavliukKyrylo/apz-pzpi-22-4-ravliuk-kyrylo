@@ -20,12 +20,20 @@ export const useStationsQuery = () => {
 
       const enriched = await Promise.all(
         rawStations.map(async (station) => {
-          const status = await stationApi.getStationStatusById(
-            station.status_station
-          );
+          let statusName = "Unknown";
+
+          if (station.status_station !== null) {
+            const status = await stationApi.getStationStatusById(
+              station.status_station
+            );
+            if (status) {
+              statusName = status.station_status_name;
+            }
+          }
+
           return {
             ...station,
-            statusName: status.station_status_name,
+            statusName,
           };
         })
       );
@@ -83,12 +91,20 @@ export const useStationsParamsQuery = (
 
       const enriched = await Promise.all(
         rawStations.map(async (station) => {
-          const status = await stationApi.getStationStatusById(
-            station.status_station
-          );
+          let statusName = "Unknown";
+
+          if (station.status_station !== null) {
+            const status = await stationApi.getStationStatusById(
+              station.status_station
+            );
+            if (status) {
+              statusName = status.station_status_name;
+            }
+          }
+
           return {
             ...station,
-            statusName: status.station_status_name,
+            statusName,
           };
         })
       );

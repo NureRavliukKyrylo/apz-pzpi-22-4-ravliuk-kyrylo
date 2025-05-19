@@ -124,8 +124,12 @@ export const CollectionSchedulesTable = () => {
                     id={schedule.id}
                     deleteFn={collectionScheduleApi.deleteSchedule}
                     label={t("schedule")}
-                    data={String(schedule.id)}
-                    onSuccess={() => setPage(1)}
+                    data={`${schedule.station?.station_of_containers_name}`}
+                    onSuccess={() => {
+                      const isLastItemOnPage =
+                        currentSchedules.length === 1 && page > 1;
+                      setPage(isLastItemOnPage ? page - 1 : page);
+                    }}
                   />
                 </td>
               </tr>

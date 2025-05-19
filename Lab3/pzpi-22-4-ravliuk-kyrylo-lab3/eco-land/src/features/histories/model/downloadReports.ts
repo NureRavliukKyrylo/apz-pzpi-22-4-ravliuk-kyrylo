@@ -11,7 +11,7 @@ export const downloadReport = async (
   const to = formatDate(endDate);
 
   if (!from || !to) {
-    alert("Будь ласка, виберіть діапазон дат перед завантаженням звіту.");
+    alert("Choose data");
     return;
   }
 
@@ -24,7 +24,7 @@ export const downloadReport = async (
     link.click();
     window.URL.revokeObjectURL(url);
   } catch (error) {
-    console.error("Помилка при завантаженні звіту:", error);
+    console.error("Error:", error);
     alert("Сталася помилка при завантаженні звіту.");
   }
 };
@@ -37,7 +37,7 @@ export const downloadReportContainer = async (
   const to = formatDate(endDate);
 
   if (!from || !to) {
-    alert("Будь ласка, виберіть діапазон дат перед завантаженням звіту.");
+    alert("Choose dates to get report.");
     return;
   }
 
@@ -50,7 +50,7 @@ export const downloadReportContainer = async (
     link.click();
     window.URL.revokeObjectURL(url);
   } catch (error) {
-    console.error("Помилка при завантаженні контейнерного звіту:", error);
-    alert("Сталася помилка при завантаженні звіту.");
+    console.error("Error:", error);
+    alert("Some error.");
   }
 };

@@ -188,8 +188,12 @@ export const ContainersTable = () => {
                     id={container.id}
                     deleteFn={containerApi.deleteContainer}
                     label="Container"
-                    data={`#${container.id}`}
-                    onSuccess={() => setPage(1)}
+                    data={`${container.typeName} ${container.stationName}`}
+                    onSuccess={() => {
+                      const isLastItemOnPage =
+                        currentContainers.length === 1 && page > 1;
+                      setPage(isLastItemOnPage ? page - 1 : page);
+                    }}
                   />
                 </td>
               </tr>

@@ -10,6 +10,8 @@ import { TypeContainer } from "entities/container/containerTypes";
 export type EnrichedSensor = IoTSensor & {
   containerType: TypeContainer | null;
   station: Station | null;
+  containerTypeName: string;
+  stationName: string;
 };
 
 export type PaginatedSensorsResponse = {
@@ -51,41 +53,35 @@ export const useSensorsQuery = (
 
       const response = await sensorApi.getSensorsParams(params.toString());
       const sensors = response.results;
-      const enrichedSensors = await Promise.all(
+
+      const enrichedSensors: EnrichedSensor[] = await Promise.all(
         sensors.map(async (sensor) => {
+          let station: Station | null = null;
+          let containerType: TypeContainer | null = null;
+
           if (!sensor.container_id_filling) {
             return {
               ...sensor,
               containerType: null,
               station: null,
+              containerTypeName: "Unknown",
+              stationName: "Unknown",
             };
           }
 
           const container = await containerApi.getContainerById(
             sensor.container_id_filling
           );
-
           if (!container) {
             return {
               ...sensor,
               containerType: null,
               station: null,
+              containerTypeName: "Unknown",
+              stationName: "Unknown",
             };
           }
 
-          let station: Station | null = null;
-          if (container.station_id !== null) {
-            try {
-              station = await stationApi.getStationById(container.station_id);
-            } catch (error) {
-              console.error(
-                `Failed to fetch station for container ${container.id}`,
-                error
-              );
-            }
-          }
-
-          let containerType: TypeContainer | null = null;
           if (container.type_of_container_id !== null) {
             try {
               containerType = await containerApi.getContainerTypeById(
@@ -99,10 +95,23 @@ export const useSensorsQuery = (
             }
           }
 
+          if (container.station_id !== null) {
+            try {
+              station = await stationApi.getStationById(container.station_id);
+            } catch (error) {
+              console.error(
+                `Failed to fetch station for container ${container.id}`,
+                error
+              );
+            }
+          }
+
           return {
             ...sensor,
             containerType,
             station,
+            containerTypeName: containerType?.type_name_container ?? "Unknown",
+            stationName: station?.station_of_containers_name ?? "Unknown",
           };
         })
       );

@@ -43,6 +43,7 @@ export const StationsTable = () => {
   const stations = data?.results ?? [];
 
   const totalPages = Math.ceil((data?.count ?? 0) / STATIONS_PER_PAGE);
+  const currentStations = stations ?? [];
 
   const handleOpenModal = (stationId: number, currentStatus: number) => {
     setSelectedStation({ id: stationId, status_station: currentStatus });
@@ -164,7 +165,11 @@ export const StationsTable = () => {
                     deleteFn={stationApi.deleteStation}
                     label="Station"
                     data={station.station_of_containers_name}
-                    onSuccess={() => setPage(1)}
+                    onSuccess={() => {
+                      const isLastItemOnPage =
+                        currentStations.length === 1 && page > 1;
+                      setPage(isLastItemOnPage ? page - 1 : page);
+                    }}
                   />
                 </td>
               </tr>

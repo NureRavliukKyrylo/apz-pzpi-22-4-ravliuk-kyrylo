@@ -34,6 +34,7 @@ export const SensorsTable = () => {
 
   const sensors = data?.results ?? [];
   const totalPages = Math.ceil((data?.count ?? 0) / SENSORS_PER_PAGE);
+  const currentSensors = sensors ?? [];
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
@@ -112,15 +113,19 @@ export const SensorsTable = () => {
                     ? parseUtcDate(sensor.time_of_detect)
                     : "—"}
                 </td>
-                <td>{sensor.containerType?.type_name_container}</td>
-                <td>{sensor.station?.station_of_containers_name}</td>
+                <td>{sensor.containerTypeName}</td>
+                <td>{sensor.stationName}</td>
                 <td>
                   <DeleteButton
                     id={sensor.id}
                     deleteFn={sensorApi.deleteSensor}
                     label={t("sensor")}
-                    data={String(sensor.id)}
-                    onSuccess={() => setPage(1)}
+                    data={`${sensor.stationName} ${sensor.containerTypeName}`}
+                    onSuccess={() => {
+                      const isLastItemOnPage =
+                        currentSensors.length === 1 && page > 1;
+                      setPage(isLastItemOnPage ? page - 1 : page);
+                    }}
                   />
                 </td>
               </tr>

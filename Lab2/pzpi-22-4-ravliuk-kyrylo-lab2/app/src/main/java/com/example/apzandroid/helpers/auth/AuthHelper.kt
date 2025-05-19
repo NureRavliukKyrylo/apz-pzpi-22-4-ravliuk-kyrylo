@@ -24,7 +24,7 @@ import retrofit2.Response
 
 object AuthHelper {
 
-    fun registerUser(context: Context, username: String, email: String, password: String) {
+    fun registerUser(context: Context, username: String, email: String, password: String, firebaseToken: String?) {
         val request = RegisterRequest(username, email, password)
 
         RetrofitClient.authService.register(request).enqueue(object : Callback<RegisterResponse> {
@@ -43,9 +43,11 @@ object AuthHelper {
                     }
 
                     Toast.makeText(context, "Registration successful!", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(context, MainMenu::class.java)
-                    context.startActivity(intent)
-                    fetchUserRoleAndNavigate(context)
+
+                    fetchUserRoleAndNavigate(context) {
+                        sendFirebaseToken(context, firebaseToken.toString())
+                    }
+
                 } else {
                     Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show()
                 }
@@ -75,11 +77,9 @@ object AuthHelper {
                         Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
                     }
 
-                    firebaseToken?.let {
-                        sendFirebaseToken(context, it)
+                    fetchUserRoleAndNavigate(context) {
+                        sendFirebaseToken(context, firebaseToken.toString())
                     }
-
-                    fetchUserRoleAndNavigate(context)
 
                 } else {
                     Toast.makeText(context, "Invalid credentials", Toast.LENGTH_SHORT).show()
@@ -92,7 +92,7 @@ object AuthHelper {
         })
     }
 
-    private fun fetchUserRoleAndNavigate(context: Context) {
+    private fun fetchUserRoleAndNavigate(context: Context, onSuccess: (() -> Unit)? = null) {
         RetrofitClient.accountService.myself().enqueue(object : Callback<MySelfResponse> {
             override fun onResponse(call: Call<MySelfResponse>, response: Response<MySelfResponse>) {
                 if (response.isSuccessful) {
@@ -108,6 +108,8 @@ object AuthHelper {
 
                                     val intent = Intent(context, MainMenu::class.java)
                                     context.startActivity(intent)
+
+                                    onSuccess?.invoke()
                                 } else {
                                     Toast.makeText(context, "Error fetching user role", Toast.LENGTH_SHORT).show()
                                 }
@@ -127,6 +129,7 @@ object AuthHelper {
             }
         })
     }
+
 
     fun sendFirebaseToken(context: Context, token: String) {
         val csrfToken = CsrfTokenManager.getCsrfToken(context)
@@ -156,7 +159,8 @@ object AuthHelper {
 
     fun firebaseAuthWithGoogle(
         context: Context,
-        googleSignInAccount: GoogleSignInAccount
+        googleSignInAccount: GoogleSignInAccount,
+        firebaseToken: String?
     ) {
         val idToken = googleSignInAccount.idToken ?: return
 
@@ -188,7 +192,9 @@ object AuthHelper {
                                 val body = response.body()?.string()
                                 Log.d("LOGIN_GOOGLE", "Response body: $body")
 
-                                fetchUserRoleAndNavigate(context)
+                                fetchUserRoleAndNavigate(context) {
+                                    sendFirebaseToken(context, firebaseToken.toString())
+                                }
                             } else {
                                 val errorBody = response.errorBody()?.string()
                                 Log.e("LOGIN_GOOGLE", "Error response: ${response.code()} ${response.message()}")

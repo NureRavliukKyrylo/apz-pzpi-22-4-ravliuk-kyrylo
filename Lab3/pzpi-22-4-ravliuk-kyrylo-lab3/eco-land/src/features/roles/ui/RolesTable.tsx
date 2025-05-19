@@ -76,7 +76,11 @@ export const RolesTable = () => {
                       deleteFn={rolesApi.deleteRoles}
                       label={t("role")}
                       data={role.name}
-                      onSuccess={() => setPage(1)}
+                      onSuccess={() => {
+                        const isLastItemOnPage =
+                          currentRoles.length === 1 && page > 1;
+                        setPage(isLastItemOnPage ? page - 1 : page);
+                      }}
                     />
                   </td>
                 </tr>

@@ -1,0 +1,65 @@
+.rolesContainer {
+  background-color: #101c14;
+  padding: 1rem;
+  border-radius: 40px;
+  color: white;
+  font-family: sans-serif;
+  border: 1px solid #bd6060;
+  width: 80%;
+  min-height: 720px;
+  height: 100%;
+  h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    margin-bottom: 50px;
+    font-size: 40px;
+  }
+}
+
+.rolesTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-top: 90px;
+
+  thead {
+    border-bottom: 1px solid #1c2b23;
+
+    th {
+      text-align: center;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #1c2b23;
+
+      td {
+        padding: 12px;
+        text-align: center;
+      }
+    }
+  }
+}
+
+.editBtn {
+  color: #9de19d;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.error {
+  color: #d32f2f;
+  text-align: center;
+  padding: 20px;
+}

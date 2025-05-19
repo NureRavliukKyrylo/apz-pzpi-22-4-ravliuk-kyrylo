@@ -1,0 +1,35 @@
+.locateButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1000;
+  background-color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f2f2f2;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.popupButtons {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  button {
+    border-radius: 20px;
+    font-weight: 900;
+    background: #33ff00;
+    width: 70px;
+  }
+}

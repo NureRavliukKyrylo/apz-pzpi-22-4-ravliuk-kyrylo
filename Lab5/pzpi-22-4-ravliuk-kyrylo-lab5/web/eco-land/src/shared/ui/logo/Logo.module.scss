@@ -1,0 +1,20 @@
+.logo {
+  font-size: 40px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  text-decoration: none;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  transform: rotate(45deg);
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}

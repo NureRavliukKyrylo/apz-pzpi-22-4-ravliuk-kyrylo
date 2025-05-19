@@ -1,0 +1,16 @@
+.link {
+  font-size: 20px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  color: #ffffff;
+  font-weight: 900;
+  transition: transform 0.35s ease-out;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}

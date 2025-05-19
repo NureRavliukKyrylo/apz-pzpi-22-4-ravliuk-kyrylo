@@ -1,0 +1,29 @@
+# Kotlin/Java/Gradle/Android specific
+.gradle/
+build/
+.idea/
+*.iml
+local.properties
+.DS_Store
+*.apk
+*.ap_
+captures/
+output.json
+
+# macOS / Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Logs
+*.log
+
+# Android Studio
+.cache/
+*.keystore
+*.jks
+
+# Other
+*.class
+out/

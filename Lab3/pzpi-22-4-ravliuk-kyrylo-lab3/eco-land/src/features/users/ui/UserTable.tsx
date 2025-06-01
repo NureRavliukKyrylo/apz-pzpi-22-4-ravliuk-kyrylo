@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useUsersQuery } from "../model/useUsersQuery";
 import styles from "./UserTable.module.scss";
@@ -39,13 +39,15 @@ export const UsersTable = () => {
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
-    setPage(page);
   };
 
   const handleFilterChange = (value: number) => {
     setSelectedRoleId(value);
-    setPage(page);
   };
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, selectedRoleId]);
 
   const totalPages = Math.ceil((data?.count ?? 0) / USERS_PER_PAGE);
   const start = (page - 1) * USERS_PER_PAGE;
@@ -162,3 +164,6 @@ export const UsersTable = () => {
     </div>
   );
 };
+function setPage(arg0: number) {
+  throw new Error("Function not implemented.");
+}
